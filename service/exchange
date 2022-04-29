@@ -1,1 +1,10 @@
-curl 
+curl --location --request POST 'localhost:8000/exchange' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "from_currency": {
+        "code": "USD"
+    },
+    "to_currency": {
+        "code": "JPY"
+    }
+}'
