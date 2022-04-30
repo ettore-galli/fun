@@ -23,4 +23,4 @@ async def exchange(from_currency: Currency, to_currency: Currency):
 
 @app.post("/price", response_model=Price)
 async def exchange(item: Item):
-    return Price(price=calculate_price(item.code))
+    return calculate_price(item.code)

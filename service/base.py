@@ -28,13 +28,14 @@ class Item(BaseModel):
 
 class Price(BaseModel):
     price: float
+    currency: str
 
 
 PRICES = {
-    "diamond": 10000.01,
-    "rock": 123.45,
-    "paper": 33.33,
-    "scissors": 67.89
+    "diamond": Price(price=10000.01, currency="USD"),
+    "rock": Price(price=123.45, currency="USD"),
+    "paper": Price(price=33.33, currency="USD"),
+    "scissors": Price(price=67.89, currency="JPY"),
 }
 
 

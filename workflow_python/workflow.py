@@ -20,18 +20,21 @@ class WorkflowPayload:
     def __repr__(self):
         return str(self.config) + str(self.data)
 
+    def clone(self):
+        return WorkflowPayload(config=self.config, data=self.data)
+
     @classmethod
     def unit(cls, config: Optional[Any] = None, data: Optional[Any] = None):
         return WorkflowPayload(config, data)
 
     def bind(self, f: Callable[[WorkflowPayload], WorkflowPayload]):
-        return f(self)
+        return f(self.clone())
 
     def __rshift__(self, other):
         return self.bind(other)
 
 
-def read_config_action(payload: WorkflowPayload) -> WorkflowPayload:
+def read_config_action(_: WorkflowPayload) -> WorkflowPayload:
     return WorkflowPayload(config=read_config("./cfg/config.ini"))
 
 
