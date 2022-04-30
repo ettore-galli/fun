@@ -75,3 +75,19 @@ if __name__ == "__main__":
         .bind(retrieve_prices_action)
         .bind(retrieve_exchange_action)
     )
+
+    mocked_config = {
+        'input_file': 'input/list.txt',
+        'output_directory': 'output',
+        'output_file_prefix': 'OUT',
+        'orders_url': 'http://localhost:8000/orders/order_number',
+        'price_url': 'http://localhost:8000/price',
+        'exchange_url': 'http://localhost:8000/exchange'
+    }
+    
+    print(
+        WorkflowPayload.unit(config=mocked_config)
+        .bind(read_order_action)
+        .bind(retrieve_prices_action)
+        .bind(retrieve_exchange_action)
+    )
