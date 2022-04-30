@@ -21,7 +21,7 @@ class WorkflowPayload:
         return str(self.config) + str(self.data)
 
     @classmethod
-    def unit(cls, config: Any, data: Any):
+    def unit(cls, config: Optional[Any] = None, data: Optional[Any] = None):
         return WorkflowPayload(config, data)
 
     def bind(self, f: Callable[[WorkflowPayload], WorkflowPayload]):
@@ -36,53 +36,35 @@ def read_config_action(payload: WorkflowPayload) -> WorkflowPayload:
 
 
 def read_order_action(payload: WorkflowPayload) -> WorkflowPayload:
-    return WorkflowPayload(data=get_order(service_url=payload.config["orders_url"], order_number=1))
+    return WorkflowPayload(config=payload.config, data=get_order(service_url=payload.config["orders_url"], order_number=1))
 
 
-# def print_config_action(config: Dict) -> WorkflowPayload:
-#     print(config)
-#     return WorkflowPayload()
+def retrieve_prices_action(payload: WorkflowPayload) -> WorkflowPayload:
+    priced_order = [
+        {
+            **line,
+            **get_price(service_url=payload.config["price_url"], item=line["item"])
+        }
+        for line in payload.data
+    ]
+    return WorkflowPayload(config=payload.config, data=priced_order)
 
 
-# def print_input_action(input: List) -> WorkflowPayload:
-#     for item in input:
-#         print(item)
-#     return WorkflowPayload()
+def retrieve_exchange_action(payload: WorkflowPayload) -> WorkflowPayload:
+    normalized_order = [
+        {**line,
+            "price": line["price"] * get_exchange(service_url=payload.config["exchange_url"], item=line["item"])}
+        for line in payload.data
+    ]
+    return WorkflowPayload(config=payload.config, data=normalized_order)
 
 
-# def compose_output_file_name(entry: str, config: Dict):
-#     return os.path.join(
-#         config["output_directory"],
-#         f'{config["output_file_prefix"]}_{entry[:10].strip()}.txt',
-#     )
-
-
-# def write_output_action(cfg: Dict, input: List) -> WorkflowPayload:
-#     for entry_data in input:
-#         output_file_name = compose_output_file_name(entry_data, cfg)
-#         print(f"Writing {output_file_name}")
-#         write_output(entry_data, output_file_name)
-
-#     return WorkflowPayload()
-
-
-# def workflow() -> WorkflowPayload:
-#     read_config_action().bind(
-
-
-# def workflow() -> WorkflowPayload:
-#     read_config_action().bind(
-#         lambda c: read_input_action(c["input_file"]).bind(
-#             lambda input: print_config_action(c).bind(
-#                 lambda _: print_input_action(input).bind(
-#                     lambda _: write_output_action(c, input)
-#                 )
-#             )
-#         )
-#     )
 if __name__ == "__main__":
     print(os.path.abspath("."))
     print(
-        WorkflowPayload.unit({}, {}).bind(
-            read_config_action).bind(read_order_action)
+        WorkflowPayload.unit()
+        .bind(read_config_action)
+        .bind(read_order_action)
+        .bind(retrieve_prices_action)
+        # .bind(retrieve_exchange_action)
     )
