@@ -1,0 +1,4 @@
+diamond, 5
+paper, 55
+scissors, 1
+rock, 37

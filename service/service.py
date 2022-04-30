@@ -1,6 +1,6 @@
 from typing import Optional
 from fastapi import FastAPI
-from base import Currency, Exchange, calculate_exchange_ratio, Item,  Price, calculate_price
+from base import Currency, Exchange, calculate_exchange_ratio, Item,  Price, calculate_price, OrderDetail, get_order
 
 app = FastAPI()
 
@@ -8,6 +8,12 @@ app = FastAPI()
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+@app.get("/orders/{order_number}")
+async def exchange(order_number: int):
+    print(order_number)
+    return get_order(order_number=order_number)
 
 
 @app.post("/exchange", response_model=Exchange)
