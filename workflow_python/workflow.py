@@ -10,7 +10,12 @@ from services.exchange import get_exchange
 from services.price import get_price
 from services.writer import write_output
 
-
+'''
+IO Come valore
+Composizione / Concatenamento
+Lazy -> un effetto non è tale finchè non avviene
+-> barare + procrastinare
+'''
 class WorkflowPayload:
 
     def __init__(self, config: Optional[Any] = None, data: Optional[Any] = None):
