@@ -51,9 +51,13 @@ def retrieve_prices_action(payload: WorkflowPayload) -> WorkflowPayload:
 
 
 def retrieve_exchange_action(payload: WorkflowPayload) -> WorkflowPayload:
+    target_currency = "EUR"
     normalized_order = [
-        {**line,
-            "price": line["price"] * get_exchange(service_url=payload.config["exchange_url"], item=line["item"])}
+        {
+            **line,
+            "price": line["price"] * get_exchange(service_url=payload.config["exchange_url"], from_currency=line["currency"], to_currency=target_currency),
+            "currency": target_currency
+        }
         for line in payload.data
     ]
     return WorkflowPayload(config=payload.config, data=normalized_order)
@@ -66,5 +70,5 @@ if __name__ == "__main__":
         .bind(read_config_action)
         .bind(read_order_action)
         .bind(retrieve_prices_action)
-        # .bind(retrieve_exchange_action)
+        .bind(retrieve_exchange_action)
     )
