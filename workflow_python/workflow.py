@@ -20,8 +20,8 @@ class WorkflowPayload:
     def __repr__(self):
         return str(self.config) + str(self.data)
 
-    def clone(self):
-        return WorkflowPayload(config=self.config, data=self.data)
+    def clone(self, config: Optional[Any] = None, data: Optional[Any] = None):
+        return WorkflowPayload(config=config if config is not None else self.config, data=data if data is not None else self.data)
 
     @classmethod
     def unit(cls, config: Optional[Any] = None, data: Optional[Any] = None):
@@ -34,12 +34,12 @@ class WorkflowPayload:
         return self.bind(other)
 
 
-def read_config_action(_: WorkflowPayload) -> WorkflowPayload:
-    return WorkflowPayload(config=read_config("./cfg/config.ini"))
+def read_config_action(payload: WorkflowPayload) -> WorkflowPayload:
+    return payload.clone(config=read_config("./cfg/config.ini"))
 
 
 def read_order_action(payload: WorkflowPayload) -> WorkflowPayload:
-    return WorkflowPayload(config=payload.config, data=get_order(service_url=payload.config["orders_url"], order_number=1))
+    return payload.clone(data=get_order(service_url=payload.config["orders_url"], order_number=1))
 
 
 def retrieve_prices_action(payload: WorkflowPayload) -> WorkflowPayload:
@@ -50,7 +50,7 @@ def retrieve_prices_action(payload: WorkflowPayload) -> WorkflowPayload:
         }
         for line in payload.data
     ]
-    return WorkflowPayload(config=payload.config, data=priced_order)
+    return payload.clone(data=priced_order)
 
 
 def retrieve_exchange_action(payload: WorkflowPayload) -> WorkflowPayload:
@@ -63,7 +63,7 @@ def retrieve_exchange_action(payload: WorkflowPayload) -> WorkflowPayload:
         }
         for line in payload.data
     ]
-    return WorkflowPayload(config=payload.config, data=normalized_order)
+    return payload.clone(data=normalized_order)
 
 
 if __name__ == "__main__":
