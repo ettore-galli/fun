@@ -14,7 +14,7 @@ Una raccolta di idee e spunti
 
 https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1675421665.1650872817-1307759326.1650872817&_gl=1%2akkbogm%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDg3Mjg0OC4xLjEuMTY1MDg3MzA1OS4w
 
-## Let's get functional 
+## Let's get functional
 https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w
 
 ---
@@ -65,7 +65,7 @@ Underscore.js
 
 Richieste asincrone
 
-Logging 
+Logging
 
 Routing
 
@@ -81,7 +81,7 @@ Injection
 
 Redux Thunk
 
- 
+
 ---
 # Come equando implementare il funzionale
 
@@ -121,6 +121,6 @@ workflow_python/workflow.py
 ## JS - workflow promise tradizionale
 
 
-## JS - promise 
+## JS - promise
 
 
