@@ -83,7 +83,7 @@ Redux Thunk
 
 
 ---
-# Come equando implementare il funzionale
+# Come e quando implementare il funzionale
 
 ## Non sempre, non al 100%
 ## Python / typescript non sono linguaggi funzionali puri
