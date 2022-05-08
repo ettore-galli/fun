@@ -19,18 +19,78 @@ https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale
+# Valori (Caratteristiche) della programmazione funzionale / 1
 
 ## Funzioni pure
 
 ## Immutabilità dei valori
 
-## Funzionidi livello superiore
+## Funzioni come entità "first class"
 
-## Minimi side effect (da approfondire...)
+- Argomenti di funzioni
+- Non legate a strutture
+
+## Idealmente nessun side effect 
 
 ---
+ 
 
+# Valori (Caratteristiche) della programmazione funzionale / 2
+
+## Composizione di funzioni 
+
+La composizione di funzioni sta alla base di tutto
+
+## Best fit con linguaggi fortemente tipizzati
+
+La composizione ha come prerequisito la compatibilità dei tipi
+
+---
+ 
+
+# Funzioni "totali" / 1
+
+Definite per tutti i possibili valori di input
+
+```python
+def exp2(x):
+    return 2**x
+```
+
+---
+ 
+# Funzioni totali / 2
+
+Un controesempio
+
+```python
+def reciproco(x):
+    return 1.0 / x
+```
+
+---
+ 
+# Funzioni totali / 3
+
+Metodo 1 : Restringere input
+
+```python
+x != 0
+```
+
+---
+ 
+# Funzioni totali / 4
+
+Metodo 2 : Allargare l'output -> Dare un "contesto"
+
+```python
+class Risultato
+    valore: float
+
+
+```
+---
 # Vantaggi della programmazione funzionale
 
 ## Testabilità
@@ -71,6 +131,8 @@ Routing
 
 Aggiornamenti periodici
 
+Eccezioni
+
 ---
 
 # Come integrare i side effect nel mondo funzionale
@@ -81,7 +143,21 @@ Injection
 
 Redux Thunk
 
+---
 
+# Tecniche funzionali
+
+* Passare funzioni
+
+* filter, map, reduce
+
+* Ricorsione
+
+* currying
+
+* partial application
+
+Eccezioni
 ---
 # Come e quando implementare il funzionale
 
