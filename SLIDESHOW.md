@@ -8,7 +8,7 @@ Una raccolta di idee e spunti
 
 ---
 
-# Riferimenti
+# Riferimenti e fonti di ispirazione
 
 ## Funzionale facile con typescript
 
@@ -18,11 +18,34 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w
 
 ---
+# Vantaggi della programmazione funzionale
+
+## Testabilità
+
+## Meno errori
+
+## Più facili da testare e debaggare
+
+
+## Più facili da riutilizzare
+---
+# Come e quando usare uno stile funzionale
+
+## Python / JS /Java /Go non funzionali puri
+Non sempre, non necessariamente al 100%
+
+## Per implementare sezioni di logica e workflow
+
+## Per implementare workflow e gestire side effect in modo controllato
+
+
+---
 
 # Valori (Caratteristiche) della programmazione funzionale / 1
 
 ## Funzioni pure
-
+- Restituiscono sempre e solo valori
+- Sostituibili con funzioni che restituiscono solo valori 
 ## Immutabilità dei valori
 
 ## Funzioni come entità "first class"
@@ -90,34 +113,6 @@ class Risultato
 
 
 ```
----
-# Vantaggi della programmazione funzionale
-
-## Testabilità
-
-## Meno errori
-
-## Più facili da testare e debaggare
-
-## Più facili da riutilizzare
-
----
-
-# Applicazioni della programmazione funzionale
-
-## Componenti funzionali di React (funzioni vs classi)
-
-## Reducers (immutabilità)
-
----
-
-# Librerie funzionali JS
-
-Lodash.js
-
-Ramda
-
-Underscore.js
 
 ---
 
@@ -145,6 +140,30 @@ Redux Thunk
 
 ---
 
+# Come integrare i side effect nel mondo funzionale / 2
+
+Allargamento dell'output -> casistiche di funzionamento (es. ecezioni) a valori ritornati (file inesistente simile a divisione per zero)
+
+Sostituzione di un side effect con il suo valore, in modo tale da diventare indistinguibile da esso
+
+Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente possono essere viste e sostituite con il loro valore 
+=> esempio il workflow
+
+---
+
+# Come integrare i side effect nel mondo funzionale / 
+
+**DA APPROFONDIRE**
+
+* Come si fa a gestire il caso di:
+    - scrivo
+    - rileggo
+
+* Nel workflow come si fa a testare il tutto in modo funzionale
+    (non scrivere come bind ma ad esempio elenco?)
+
+
+---
 # Tecniche funzionali
 
 * Passare funzioni
@@ -157,15 +176,6 @@ Redux Thunk
 
 * partial application
 
-Eccezioni
----
-# Come e quando implementare il funzionale
-
-## Non sempre, non al 100%
-## Python / typescript non sono linguaggi funzionali puri
-## Per implementare sezioni di logica
-## Per implementare workflow e gestire side effect in modo controllato
-## Migliorare la testabilità
 ---
 ## Funzionale:
 
