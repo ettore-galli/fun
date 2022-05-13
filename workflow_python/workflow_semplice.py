@@ -41,8 +41,8 @@ def read_console_input(payload: WorkflowPayload) -> WorkflowPayload:
 def parse_input(payload: WorkflowPayload) -> WorkflowPayload:
     try:
         return WorkflowPayload(data=int(payload.data))
-    except ValueError:
-        return WorkflowPayload(success=False)
+    except ValueError as e:
+        return WorkflowPayload(success=False, data=str(e))
 
 
 def produce_output(payload: WorkflowPayload) -> WorkflowPayload:
