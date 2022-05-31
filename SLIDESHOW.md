@@ -17,6 +17,8 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 ## Let's get functional
 https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w
 
+## Stack Wars: Functional programming strikes back
+https://talks.codemotion.com/stack-wars-functional-programming-strike?_ga=2.21931899.1326689086.1652619683-1663033125.1652035888&_gl=1%2a1ji6zbu%2a_ga%2aMTY2MzAzMzEyNS4xNjUyMDM1ODg4%2a_ga_52S30H0VCG%2aMTY1MjYxOTcxNy4xLjEuMTY1MjYxOTg3Ni4w
 ---
 # Vantaggi della programmazione funzionale
 
@@ -48,6 +50,10 @@ Non sempre, non necessariamente al 100%
 - Sostituibili con funzioni che restituiscono solo valori 
 ## Immutabilità dei valori
 
+## Trasparenza referenziale
+
+## Divide et impera 
+Funzioni piccole e focalizzate
 ## Funzioni come entità "first class"
 
 - Argomenti di funzioni
@@ -149,6 +155,7 @@ Sostituzione di un side effect con il suo valore, in modo tale da diventare indi
 Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente possono essere viste e sostituite con il loro valore 
 => esempio il workflow
 
+fare esempio connettori audio
 ---
 
 # Come integrare i side effect nel mondo funzionale / 
