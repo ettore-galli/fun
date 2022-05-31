@@ -69,6 +69,9 @@ class Workflow:
 
         return Workflow(result=_bind)
 
+    def __rshift__(self, other):
+        return self.bind(other)
+
 
 async def process_one(session, url):
     async def fetch_data(url) -> Workflow:
@@ -81,13 +84,20 @@ async def process_one(session, url):
     async def save_data(data) -> Workflow:
         return Workflow(result=await store_results(data))
 
-    return (
-        await Workflow.unit(url)
-        .bind(fetch_data)
-        .bind(log_data)
-        .bind(save_data)
-        .result()
-    )
+    bind_syntax: bool = True
+    if bind_syntax:
+        return (
+            await Workflow.unit(url)
+            .bind(fetch_data)
+            .bind(log_data)
+            .bind(save_data)
+            .result()
+        )
+
+    shift_syntax: bool = True
+    if shift_syntax:
+        workflow = Workflow.unit(url) >> fetch_data >> log_data >> save_data
+        return await (workflow).result()
 
 
 async def process_all():
