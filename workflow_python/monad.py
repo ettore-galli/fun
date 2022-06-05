@@ -31,11 +31,19 @@ class Monad:
             return Monad(value=self.value or self.message, success=self.success, message=self.message)
         return f(self.value())
 
+    def then(self, f: Callable[[], Monad]):
+        if not self.success:
+            return Monad(value=self.value or self.message, success=self.success, message=self.message)
+        return f()
+
     def __or__(self, f):
         return self.bind(f)
 
     def __rshift__(self, f):
         return self.bind(f)
+
+    def __add__(self, f):
+        return self.then(f)
 
 
 def pure_input(_):
@@ -44,21 +52,25 @@ def pure_input(_):
         return Monad(lambda: None, success=False, message=f"error: {value}")
     return Monad(lambda: value)
 
+def pure_input_action():
+    value = input()
+    if value == "xxx":
+        return Monad(lambda: None, success=False, message=f"error: {value}")
+    return Monad(lambda: value)
 
 def pure_print(text): return Monad(lambda: print(f"* {text} *"))
 
 
 if __name__ == '__main__':
     print("1 --- raw")
-    workflow_raw = Monad(lambda: "init") >> \
-        (lambda _: Monad(lambda: input())) >> \
-        (lambda text: Monad(lambda: print(f"* {text} *")))
+    # workflow_raw = Monad(lambda: "init") >> \
+    #     (lambda _: Monad(lambda: input())) >> \
+    #     (lambda text: Monad(lambda: print(f"* {text} *")))
 
-    workflow_raw.run()
+    # workflow_raw.run()
 
     print("2 --- better (actual complex functions")
-    workflow_better = Monad(lambda: "init") >> pure_input >> pure_print
-
+    workflow_better = Monad(lambda: "init") + pure_input_action >> pure_print
     workflow_better.run()
 
     print("3 --- mocked")
