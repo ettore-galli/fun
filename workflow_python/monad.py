@@ -4,7 +4,7 @@ from typing import Callable, Any, Optional
 
 
 class Monad:
-    def __init__(self, value=lambda: Monad(None), success: bool = True, message: Optional[str] = None):
+    def __init__(self, value=lambda: Monad("start"), success: bool = True, message: Optional[str] = None):
         self.value = value
         self.success = success
         self.message = message
@@ -38,23 +38,29 @@ class Monad:
         return self.bind(f)
 
 
-def pure_input(_): return Monad(lambda: input())
+def pure_input(_):
+    value = input()
+    if value == "xxx":
+        return Monad(lambda: None, success=False, message=f"error: {value}")
+    return Monad(lambda: value)
+
+
 def pure_print(text): return Monad(lambda: print(f"* {text} *"))
 
 
 if __name__ == '__main__':
     print("1 --- raw")
-    workflow_raw = Monad.start() >> \
+    workflow_raw = Monad(lambda: "init") >> \
         (lambda _: Monad(lambda: input())) >> \
         (lambda text: Monad(lambda: print(f"* {text} *")))
 
     workflow_raw.run()
 
     print("2 --- better (actual complex functions")
-    workflow_better = Monad.start() >> pure_input >> pure_print
+    workflow_better = Monad(lambda: "init") >> pure_input >> pure_print
 
     workflow_better.run()
 
     print("3 --- mocked")
-    workflow_mock = Monad(lambda: "exampe value") >> pure_print
+    workflow_mock = Monad(lambda: "example value") >> pure_print
     workflow_mock.run()
