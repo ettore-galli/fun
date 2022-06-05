@@ -42,7 +42,7 @@ class Monad:
     def __rshift__(self, f):
         return self.bind(f)
 
-    def __add__(self, f):
+    def __pow__(self, f):
         return self.then(f)
 
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     # workflow_raw.run()
 
     print("2 --- better (actual complex functions")
-    workflow_better = Monad(lambda: "init") + pure_input_action >> pure_print
+    workflow_better = Monad(lambda: "init") ** pure_input_action >> pure_print
     workflow_better.run()
 
     print("3 --- mocked")
