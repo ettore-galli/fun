@@ -43,9 +43,18 @@ def pure_print(text): return Monad(lambda: print(f"* {text} *"))
 
 
 if __name__ == '__main__':
-    print("1 ---")
+    print("1 --- raw")
     workflow_raw = Monad.start() >> \
         (lambda _: Monad(lambda: input())) >> \
         (lambda text: Monad(lambda: print(f"* {text} *")))
 
     workflow_raw.run()
+
+    print("2 --- better (actual complex functions")
+    workflow_better = Monad.start() >> pure_input >> pure_print
+
+    workflow_better.run()
+
+    print("3 --- mocked")
+    workflow_mock = Monad(lambda: "exampe value") >> pure_print
+    workflow_mock.run()
