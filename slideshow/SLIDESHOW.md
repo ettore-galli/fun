@@ -10,14 +10,11 @@ Una raccolta di idee e spunti
 
 # Vantaggi della programmazione funzionale
 
-## Testabilità
+* Meno errori
 
-## Meno errori
+* Più facili da testare e _debuggare_
 
-## Più facili da testare e _debuggare_
-
-
-## Più facili da riutilizzare
+* Più facili da riutilizzare
 ---
 # Come e quando usare uno stile funzionale
 
@@ -116,7 +113,7 @@ class Risultato
 
 ---
 
-# Elementi dello sviluppo funzionale
+# Elementi cardine dello sviluppo funzionale
 
 ## Composizione
 
@@ -130,23 +127,97 @@ La composizione può essere vista come un concatenamento
 (es. "pipe")
 
 
+![width:600px](img/chain-example.jpg).
+ 
 ---
 
-# Come integrare i side effect nel mondo funzionale
+# Come integrare i side effect nel mondo funzionale / 1
 
-Injection
+## Injection
+Passare lo "step successivo" come parametro
 
-"Barare e procrastinare"
+---
 
- ==> Incapsulare in una funzione
+# Esempio Injection 
 
-Redux Thunk incapsula l'esecuzione dei side effect in una if
+```python
+from dataclasses import dataclass
+from typing import Any, Optional
+
+
+@dataclass
+class Result:
+    success: Optional[bool] = True
+    message: Optional[str] = None
+    data: Optional[float] = None
+
+    def __repr__(self) -> str:
+        return self.data if self.success else self.message
+```
+
+---
+
+# Esempio Injection 
+
+```python
+def ask_for_input():
+    return input()
+
+
+def process(input_value: Optional[Any]) -> Result:
+    try:
+        return Result(data=f"*** {float(input_value) * 5} ***")
+    except Exception as error:
+        return Result(success=False, message=str(error))
+
+
+def output_result(result):
+    print("-" * 50)
+    print(result)
+    print("-" * 50)
+
+```
+
+---
+
+# Esempio Injection 
+
+```python
+
+def workflow(get_input, process, put_output):
+    input_value = get_input()
+    result = process(input_value)
+    put_output(result)
+
+
+if __name__ == '__main__':
+    workflow(ask_for_input, process, output_result)
+```
+
+---
+
+# Esempio Injection 
+
+* Trasparenza referenziale: passo le funzioni come valori
+* "Lazy" (compatibilmente con python) perchè le funzioni sono eseguite
 
 ---
 
 # Come integrare i side effect nel mondo funzionale / 2
 
-Allargamento dell'output -> casistiche di funzionamento (es. ecezioni) a valori ritornati (file inesistente simile a divisione per zero)
+
+## Sostituzione del side effect con una sua rappresentazione
+"Barare e procrastinare"
+    * "Barare" = Di fatto le funzioni non sono pure
+    * "Procrastinare" = Incapsulare in una funzione. 
+    Un side effect infatti non è tale finché non avviene.
+
+---
+
+# Come integrare i side effect nel mondo funzionale / 2
+
+## Allargamento dell'output 
+Casistiche di funzionamento (es. eccezioni) rappresentate da valori ritornati (file inesistente, divisione per zero...) invece che da branch di esec
 
 Sostituzione di un side effect con un valore che lo rappresenta (tipicamente una lambda), in modo tale da diventare indistinguibile da esso
 
@@ -157,5 +228,6 @@ Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente p
 fare esempio connettori audio
 ---
 
+# Come integrare i side effect nel mondo funzionale / 3
 
 
