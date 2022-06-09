@@ -58,15 +58,19 @@ def pure_print(text): return Workflow(lambda: print(f"* {text} *"))
 
 
 if __name__ == '__main__':
-    print("1 --- raw")
-    # workflow_raw = Monad(lambda: "init") >> \
-    #     (lambda _: Monad(lambda: input())) >> \
-    #     (lambda text: Monad(lambda: print(f"* {text} *")))
 
-    # workflow_raw.run()
+    '''
+    print("1 --- raw")
+    workflow_raw = Monad(lambda: "init") >> \
+        (lambda _: Monad(lambda: input())) >> \
+        (lambda text: Monad(lambda: print(f"* {text} *")))
+
+    workflow_raw.run()
+    '''
 
     print("2 --- better (actual complex functions")
-    workflow_better = Workflow(lambda: "init") ** pure_input_action >> pure_print
+    workflow_better = Workflow(
+        lambda: "init") ** pure_input_action >> pure_print
     workflow_better.run()
 
     print("3 --- mocked")
