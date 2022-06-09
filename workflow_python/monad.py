@@ -20,12 +20,6 @@ class Monad:
     def run(self):
         return self.value()
 
-    # @staticmethod
-    # def _merge_data(current: Monad, new: Monad):
-    #     def strmsg(message: Optional[str] = None):
-    #         return message if message is not None else ""
-    #     return Monad(new.value or current.value, success=current.success and new.success, message=strmsg(current.message) + strmsg(new.message))
-
     def bind(self, f: Callable[[Any], Monad]):
         if not self.success:
             return Monad(value=self.value or self.message, success=self.success, message=self.message)
@@ -52,11 +46,13 @@ def pure_input(_):
         return Monad(lambda: None, success=False, message=f"error: {value}")
     return Monad(lambda: value)
 
+
 def pure_input_action():
     value = input()
     if value == "xxx":
         return Monad(lambda: None, success=False, message=f"error: {value}")
     return Monad(lambda: value)
+
 
 def pure_print(text): return Monad(lambda: print(f"* {text} *"))
 

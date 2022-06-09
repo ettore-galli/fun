@@ -217,17 +217,31 @@ if __name__ == '__main__':
 # Come integrare i side effect nel mondo funzionale / 2
 
 ## Allargamento dell'output 
-Casistiche di funzionamento (es. eccezioni) rappresentate da valori ritornati (file inesistente, divisione per zero...) invece che da branch di esec
+
+* Ritornare sempre un valore
+* Ritornare un errore al posto di sollevare un'eccezione
+
+---
+
+# Come integrare i side effect nel mondo funzionale / 2
+
+## Gestione dei side effect
 
 Sostituzione di un side effect con un valore che lo rappresenta (tipicamente una lambda), in modo tale da diventare indistinguibile da esso
 
 Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente possono essere viste e sostituite con il loro valore 
 
-=> esempio il workflow
+Un side effect infatti non è tale finché non avviene.
 
-fare esempio connettori audio
 ---
 
-# Come integrare i side effect nel mondo funzionale / 3
+# Come integrare i side effect nel mondo funzionale / 2
+
+## Composizione come concatenamento
+
+Si vogliono "collegare" pezzi di logica tra loro tenendoli disaccoppiati
+
+Si vuole dare un workflow orizzontale/sequenziale
+
 
 
