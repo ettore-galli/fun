@@ -1,56 +1,74 @@
+# https://www.csse.canterbury.ac.nz/greg.ewing/essays/monads/DemystifyingMonads.html
 from __future__ import annotations
-from dataclasses import dataclass
-
-import os
-from typing import Optional, Any, Callable,   Union
-
-from copy import deepcopy
+from typing import Callable, Any, Optional
 
 
-@dataclass(init=True, frozen=True)
-class WorkflowPayload:
-    user_input: Optional[str] = None
-    number: Optional[Union[float, int]] = None
+class Workflow:
+    def __init__(self, value=lambda: Workflow("start"), success: bool = True, message: Optional[str] = None):
+        self.value = value
+        self.success = success
+        self.message = message
 
-
-class WorkflowContext:
-
-    def __init__(self, data: Optional[Any] = None, success: Optional[bool] = None):
-        self.data: Optional[Any] = data
-        self.success: bool = success if success is not None else True
-
-    def __repr__(self):
-        return str(self.config) + str(self.data)
+    @staticmethod
+    def start():
+        return Workflow()
 
     @classmethod
-    def unit(cls, data: Optional[Any] = None, success: Optional[bool] = None):
-        return WorkflowContext(data, success)
+    def unit(cls, value: Any = None):
+        return Workflow(lambda _: value)
 
-    def bind(self, f: Callable[[WorkflowContext], WorkflowContext]):
-        return f(deepcopy(self.data))
+    def run(self):
+        return self.value()
 
-    def __rshift__(self, other):
-        return self.bind(other)
+    def bind(self, f: Callable[[Any], Workflow]):
+        if not self.success:
+            return Workflow(value=self.value or self.message, success=self.success, message=self.message)
+        return f(self.value())
+
+    def then(self, f: Callable[[], Workflow]):
+        if not self.success:
+            return Workflow(value=self.value or self.message, success=self.success, message=self.message)
+        return f()
+
+    def __or__(self, f):
+        return self.bind(f)
+
+    def __rshift__(self, f):
+        return self.bind(f)
+
+    def __pow__(self, f):
+        return self.then(f)
 
 
-def read_console_input(_: WorkflowPayload) -> WorkflowContext:
-    return WorkflowContext(data=WorkflowPayload(user_input=input()))
+def pure_input(_):
+    value = input()
+    if value == "xxx":
+        return Workflow(lambda: None, success=False, message=f"error: {value}")
+    return Workflow(lambda: value)
 
 
-def parse_input(payload: WorkflowPayload) -> WorkflowContext:
-    try:
-        return WorkflowContext(data=WorkflowPayload(number=float(payload.user_input)))
-    except ValueError:
-        return WorkflowContext(success=False, data=payload)
+def pure_input_action():
+    value = input()
+    if value == "xxx":
+        return Workflow(lambda: None, success=False, message=f"error: {value}")
+    return Workflow(lambda: value)
 
 
-def produce_output(payload: WorkflowPayload) -> WorkflowContext:
-    print(f"* {payload.number} *")
+def pure_print(text): return Workflow(lambda: print(f"* {text} *"))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    print("1 --- raw")
+    # workflow_raw = Monad(lambda: "init") >> \
+    #     (lambda _: Monad(lambda: input())) >> \
+    #     (lambda text: Monad(lambda: print(f"* {text} *")))
 
-    WorkflowContext.unit() \
-        .bind(read_console_input) \
-        .bind(parse_input) \
-        .bind(produce_output)
+    # workflow_raw.run()
+
+    print("2 --- better (actual complex functions")
+    workflow_better = Workflow(lambda: "init") ** pure_input_action >> pure_print
+    workflow_better.run()
+
+    print("3 --- mocked")
+    workflow_mock = Workflow(lambda: "example value") >> pure_print
+    workflow_mock.run()
