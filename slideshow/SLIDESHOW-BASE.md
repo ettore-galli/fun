@@ -4,7 +4,7 @@ marp: true
 
 # Functional programming
 
-Una raccolta di idee e spunti
+Una raccolta di idee di base e spunti
 
 ---
 
@@ -40,22 +40,30 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 ---
 # Come e quando usare uno stile funzionale
 
-## Python / JS / Java / Go non sono funzionali puri
-Non sempre, non necessariamente al 100%
+* Python / JS / Java / Go non sono funzionali puri; quindi non sempre, non necessariamente al 100%
 
-## Per implementare singole sezioni di logica e workflow
+* Per implementare singole sezioni di logica complessa e workflow
 
-## Per implementare workflow e gestire side effect in modo controllato
+* Come fonte di ispirazione e princìpi per gestire i side effect in modo controllato e per isolarli dal resto del codice
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 1 
+# Valori (Caratteristiche) della programmazione funzionale
 
-## Funzioni pure
+## Funzioni pure
+
 - Restituiscono sempre e solo valori
 - **Sostituibili con i valori restituiti** 
 
+---
+
+# Valori (Caratteristiche) della programmazione funzionale
+
 ## Immutabilità dei valori
+
+---
+
+# Valori (Caratteristiche) della programmazione funzionale
 
 ## Trasparenza referenziale
 
