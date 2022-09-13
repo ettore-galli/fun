@@ -17,7 +17,7 @@ Una raccolta di idee e spunti
 https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w
 
 Concetti base
-    
+
 ---
 
 # Fonti di ispirazione - 2: Codemotion talk:
@@ -49,11 +49,11 @@ Non sempre, non necessariamente al 100%
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 1 
+# Valori (Caratteristiche) della programmazione funzionale / 1
 
 ## Funzioni pure
 - Restituiscono sempre e solo valori
-- **Sostituibili con i valori restituiti** 
+- **Sostituibili con i valori restituiti**
 
 ## Immutabilità dei valori
 
@@ -63,21 +63,21 @@ Non sempre, non necessariamente al 100%
 
 # Valori (Caratteristiche) della programmazione funzionale / 2
 
-## Divide et impera 
+## Divide et impera
 Funzioni piccole e focalizzate
 ## Funzioni come entità "first class"
 
 - Argomenti di funzioni
 - Non legate a strutture
 
-## Idealmente nessun side effect 
+## Idealmente nessun side effect
 
 ---
- 
+
 
 # Valori (Caratteristiche) della programmazione funzionale / 3
 
-## Composizione di funzioni 
+## Composizione di funzioni
 
 La composizione di funzioni sta alla base di tutto
 
@@ -86,7 +86,7 @@ La composizione di funzioni sta alla base di tutto
 La composizione ha come prerequisito la compatibilità dei tipi
 
 ---
- 
+
 
 # Funzioni "totali" / 1
 
@@ -98,7 +98,7 @@ def exp2(x):
 ```
 
 ---
- 
+
 # Funzioni totali / 2
 
 Un **contro**esempio
@@ -109,7 +109,7 @@ def reciproco(x):
 ```
 
 ---
- 
+
 # Funzioni totali / 3
 
 Metodo 1 : Restringere input
@@ -117,11 +117,11 @@ Metodo 1 : Restringere input
 ```python
 x != 0
 
-1.0 / x == ":-)" 
+1.0 / x == ":-)"
 ```
 
 ---
- 
+
 # Funzioni totali / 4
 
 Metodo 2 : Allargare l'output -> Dare un "contesto"
@@ -150,7 +150,57 @@ La composizione può essere vista come un concatenamento
 
 
 ![width:600px](img/chain-example.jpg).
- 
+
+---
+
+# Composizione
+
+Nel caso di composizioni complesse si ~~vuole~~ può volere evitare una situazione simile alla seguente...
+
+```
+
+step1 = funzione_1(parametri_iniziali)
+
+step2 = funzione_2(step1, p2, p3...)
+
+...
+
+risultato = funzione_n(step_n_meno_1, px, py...)
+
+```
+
+---
+
+# Composizione
+
+... oppure anche:
+
+```
+
+risultato = (
+    ...
+            funzione_3(
+                funzione_2(
+                    funzione_1(parametri_iniziali)
+                )
+            )
+    ...
+)
+
+```
+
+---
+
+# Composizione
+
+Una possibile soluzione:
+
+```
+..._..._platform/common/utils.py
+def chain_functions(...)
+
+```
+
 ---
 
 # Come integrare i side effect nel mondo funzionale / 1
@@ -168,14 +218,14 @@ inject.py
 ## Sostituzione del side effect con una sua rappresentazione
 "Barare e procrastinare"
     * "Barare" = Di fatto le funzioni non sono pure
-    * "Procrastinare" = Incapsulare in una funzione. 
+    * "Procrastinare" = Incapsulare in una funzione.
     Un side effect infatti non è tale finché non avviene.
 
 ---
 
 # Come integrare i side effect nel mondo funzionale / 2
 
-## Allargamento dell'output 
+## Allargamento dell'output
 
 * Ritornare sempre un valore
 * Ritornare un valore che rappresenta un errore al posto di sollevare un'eccezione
@@ -188,7 +238,7 @@ inject.py
 
 Sostituzione di un side effect con un valore che lo rappresenta (tipicamente una lambda), in modo tale da diventare indistinguibile da esso
 
-Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente possono essere viste e sostituite con il loro valore 
+Le funzioni pure non sono pure (nel senso che i side effect ci sono) solamente possono essere viste e sostituite con il loro valore
 
 Un side effect infatti non è tale finché non avviene.
 
@@ -209,6 +259,7 @@ Si vuole dare un workflow orizzontale/sequenziale
 Tool di concatenamento
 
 
+---
 
 # Come integrare i side effect nel mondo funzionale / 3
 
