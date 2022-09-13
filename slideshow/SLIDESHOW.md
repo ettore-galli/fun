@@ -194,7 +194,7 @@ Un side effect infatti non è tale finché non avviene.
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 2
+# Come integrare i side effect nel mondo funzionale / 3
 
 ## Composizione come concatenamento
 
@@ -203,6 +203,14 @@ Si vogliono "collegare" pezzi di logica tra loro tenendoli disaccoppiati
 Si vuole dare un workflow orizzontale/sequenziale
 
 
-# Come integrare i side effect nel mondo funzionale / 2
+# Come integrare i side effect nel mondo funzionale / 3
+
+
+Tool di concatenamento
+
+
+
+# Come integrare i side effect nel mondo funzionale / 3
+
 
 workflow.py
