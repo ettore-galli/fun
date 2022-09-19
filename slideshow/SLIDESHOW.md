@@ -30,6 +30,17 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 
 ---
 
+# Agenda
+
+* Valori della programmazionne funzionale
+
+* Funzioni totali
+
+* Composizione
+
+* ~~Side effect~~ TBD
+---
+
 # Vantaggi della programmazione funzionale
 
 * Meno errori
