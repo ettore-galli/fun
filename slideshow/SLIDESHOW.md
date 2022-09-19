@@ -96,18 +96,16 @@ La composizione ha come prerequisito la compatibilità dei tipi
 
 # Valori (Caratteristiche) della programmazione funzionale / 5
 
-## Profondamente radicato nella nostra cultura
+## Radicato nella nostra cultura: Excel / Haskell
 
-Excel / Haskell
-
-![width:300px](img/excel.png).
+![width:600px](img/excel.png).
 
 ```Haskell
-test :: Int -> Int -> String
-test a b = if a > b then "OK" else "FAIL"
+risultato :: Int -> Int -> String
+risultato a b = if a > b then "OK" else "FAIL"
 
 
-main = putStrLn (test 5 4)
+main = putStrLn (risultato 5 4)
 ```
 
 ---
