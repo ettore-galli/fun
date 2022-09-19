@@ -74,8 +74,15 @@ Funzioni piccole e focalizzate
 
 ---
 
-
 # Valori (Caratteristiche) della programmazione funzionale / 3
+
+## Approccio dichiarativo
+
+Aspetto dichiarativo prevalente.
+
+---
+
+# Valori (Caratteristiche) della programmazione funzionale / 4
 
 ## Composizione di funzioni
 
@@ -84,6 +91,24 @@ La composizione di funzioni sta alla base di tutto
 ## Best fit con linguaggi fortemente tipizzati
 
 La composizione ha come prerequisito la compatibilità dei tipi
+
+---
+
+# Valori (Caratteristiche) della programmazione funzionale / 5
+
+## Profondamente radicato nella nostra cultura
+
+Excel / Haskell
+
+![width:300px](img/excel.png).
+
+```Haskell
+test :: Int -> Int -> String
+test a b = if a > b then "OK" else "FAIL"
+
+
+main = putStrLn (test 5 4)
+```
 
 ---
 
@@ -132,6 +157,15 @@ class Risultato
     successo: boolean
 
 ```
+
+---
+# Funzioni totali / 5
+
+Altre idee: Pattern Null Object
+
+Il patern Null Object implementa l'idea stessa di avere un output "in ogni caso"
+
+Implementa un concetto (quasi puramente) funzionale in ambito oop
 
 ---
 
