@@ -1,5 +1,20 @@
 ---
 marp: true
+author: Ettore Galli
+size: "16:9"
+style: |
+    section {
+        background-color: #ffffee;
+        color: #101000;
+        font:
+    }
+    h1, h2, h3, h4, h5, h6, {
+        color: #101000;
+    }
+    a {
+        color: #101050;
+    }
+
 ---
 
 # Functional programming
@@ -32,7 +47,7 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 
 # Agenda
 
-* Valori della programmazionne funzionale
+* Valori e caratteristiche della programmazione funzionale
 
 * Funzioni totali
 
@@ -60,7 +75,7 @@ Non sempre, non necessariamente al 100%
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 1
+# Valori / 1
 
 ## Funzioni pure
 - Restituiscono sempre e solo valori
@@ -72,7 +87,7 @@ Non sempre, non necessariamente al 100%
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 2
+# Valori / 2
 
 ## Divide et impera
 Funzioni piccole e focalizzate
@@ -81,11 +96,11 @@ Funzioni piccole e focalizzate
 - Argomenti di funzioni
 - Non legate a strutture
 
-## Idealmente nessun side effect
+## ~~Idealmente nessun side effect~~ Side effect abilmente nascosti
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 3
+# Valori / 3
 
 ## Approccio dichiarativo
 
@@ -93,7 +108,7 @@ Aspetto dichiarativo prevalente.
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 4
+# Valori / 4
 
 ## Composizione di funzioni
 
@@ -105,9 +120,10 @@ La composizione ha come prerequisito la compatibilità dei tipi
 
 ---
 
-# Valori (Caratteristiche) della programmazione funzionale / 5
+# Valori / 5
 
-## Radicato nella nostra cultura: Excel / Haskell
+## (Molto più) Radicato nella nostra cultura (di quanto appaia):
+### Excel / Haskell
 
 ![width:600px](img/excel.png).
 
@@ -120,7 +136,6 @@ main = putStrLn (risultato 5 4)
 ```
 
 ---
-
 
 # Funzioni "totali" / 1
 
@@ -178,15 +193,7 @@ Implementa un concetto (quasi puramente) funzionale in ambito oop
 
 ---
 
-# Elementi cardine dello sviluppo funzionale
-
-## Composizione
-
-## Gestione dei side effect
-
----
-
-# Composizione
+# Composizione / 1
 
 La composizione può essere vista come un concatenamento
 (es. "pipe")
@@ -196,7 +203,7 @@ La composizione può essere vista come un concatenamento
 
 ---
 
-# Composizione
+# Composizione / 2
 
 Nel caso di composizioni complesse si ~~vuole~~ può volere evitare una situazione simile alla seguente...
 
@@ -214,7 +221,7 @@ risultato = funzione_n(step_n_meno_1, px, py...)
 
 ---
 
-# Composizione
+# Composizione / 3
 
 ... oppure anche:
 
@@ -234,7 +241,7 @@ risultato = (
 
 ---
 
-# Composizione
+# Composizione / 4
 
 Una possibile soluzione:
 
@@ -246,7 +253,7 @@ def chain_functions(...)
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 1
+# Side effect / 1
 
 ## Injection
 Passare lo "step successivo" come parametro
@@ -255,7 +262,7 @@ inject.py
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 2
+# Side effect / 2
 
 
 ## Sostituzione del side effect con una sua rappresentazione
@@ -266,7 +273,7 @@ inject.py
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 2
+# Side effect / 2
 
 ## Allargamento dell'output
 
@@ -275,7 +282,7 @@ inject.py
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 2
+# Side effect / 2
 
 ## Gestione dei side effect
 
@@ -287,7 +294,7 @@ Un side effect infatti non è tale finché non avviene.
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 3
+# Side effect / 3
 
 ## Composizione come concatenamento
 
@@ -295,8 +302,8 @@ Si vogliono "collegare" pezzi di logica tra loro tenendoli disaccoppiati
 
 Si vuole dare un workflow orizzontale/sequenziale
 
-
-# Come integrare i side effect nel mondo funzionale / 3
+---
+# Side effect / 4
 
 
 Tool di concatenamento
@@ -304,7 +311,7 @@ Tool di concatenamento
 
 ---
 
-# Come integrare i side effect nel mondo funzionale / 3
+# Side effect / 5
 
 
 workflow.py
