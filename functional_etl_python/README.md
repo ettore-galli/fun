@@ -20,4 +20,3 @@
 - Processing parallelo
 - Multi sorgente
 - Multi output
-
