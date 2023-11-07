@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Module",
+            "type": "python",
+            "request": "launch",
+            "module": "enter-your-module-name",
+            "justMyCode": true
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
@@ -21,6 +28,21 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${fileDirname}"
+        },
+        {
+            "name": "Functional ETL",
+            "type": "python",
+            "request": "launch",
+            "module": "functional_etl",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "functional_etl_python",
+            "env": {
+                "PYTHONPATH": "functional_etl_python/functional_etl"
+            },
+            "args": [
+                "run/source_data/iris/iris.data"
+            ]
         }
     ]
 }
