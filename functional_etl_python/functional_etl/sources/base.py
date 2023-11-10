@@ -3,7 +3,7 @@ from typing import Any, Generator, Optional, Protocol
 
 
 @dataclass(frozen=True)
-class EtlDataRecord:
+class EtlSourceDataRecord:
     """
     1. sepal length in cm
     2. sepal width in cm
@@ -23,5 +23,5 @@ class EtlDataRecord:
 
  
 class EtlDataSource(Protocol):
-    def __call__(self, *args: Any, **kwds: Any) -> Generator[EtlDataRecord, None, None]:
+    def __call__(self, *args: Any, **kwds: Any) -> Generator[EtlSourceDataRecord, None, None]:
         return super().__call__(*args, **kwds)
