@@ -21,27 +21,30 @@ style: |
 
 Una raccolta di idee e spunti
 
+"Pattern is when you do something over and over and give it a name"
+https://vimeo.com/113588389
+
 ---
 
-# Fonti di ispirazione - 1: Codemotion talk:
+# Fonti di ispirazione - 1: Codemotion talk
 
 **Jemima Abu**
 
 "Let's get functional"
 
-https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w
+<https://talks.codemotion.com/lets-get-functional?_ga=2.199840302.1675421665.1650872817-1307759326.1650872817&_gl=1%2a1w6mr7n%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDkxNTUwOS4zLjEuMTY1MDkxNTY1NS4w>
 
 Concetti base
 
 ---
 
-# Fonti di ispirazione - 2: Codemotion talk:
+# Fonti di ispirazione - 2: Codemotion talk
 
 **Luca Cavallaro**
 
 Funzionale è facile con TypeScript
 
-https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1675421665.1650872817-1307759326.1650872817&_gl=1%2akkbogm%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDg3Mjg0OC4xLjEuMTY1MDg3MzA1OS4w
+<https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1675421665.1650872817-1307759326.1650872817&_gl=1%2akkbogm%2a_ga%2aMTMwNzc1OTMyNi4xNjUwODcyODE3%2a_ga_52S30H0VCG%2aMTY1MDg3Mjg0OC4xLjEuMTY1MDg3MzA1OS4w>
 
 ---
 
@@ -54,6 +57,7 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 * Composizione
 
 * ~~Side effect~~ TBD
+
 ---
 
 # Vantaggi della programmazione funzionale
@@ -63,10 +67,13 @@ https://talks.codemotion.com/funzionale--facile-con-typescript?_ga=2.134894065.1
 * Più facili da testare e _debuggare_
 
 * Più facili da riutilizzare
+
 ---
+
 # Come e quando usare uno stile funzionale
 
 ## Python / JS / Java / Go non sono funzionali puri
+
 Non sempre, non necessariamente al 100%
 
 ## Per implementare singole sezioni di logica e workflow
@@ -78,8 +85,9 @@ Non sempre, non necessariamente al 100%
 # Valori / 1
 
 ## Funzioni pure
+
 - Restituiscono sempre e solo valori
-- **Sostituibili con i valori restituiti**
+* **Sostituibili con i valori restituiti**
 
 ## Immutabilità dei valori
 
@@ -90,11 +98,13 @@ Non sempre, non necessariamente al 100%
 # Valori / 2
 
 ## Divide et impera
+
 Funzioni piccole e focalizzate
+
 ## Funzioni come entità "first class"
 
-- Argomenti di funzioni
-- Non legate a strutture
+* Argomenti di funzioni
+* Non legate a strutture
 
 ## ~~Idealmente nessun side effect~~ Side effect abilmente nascosti
 
@@ -122,7 +132,8 @@ La composizione ha come prerequisito la compatibilità dei tipi
 
 # Valori / 5
 
-## (Molto più) Radicato nella nostra cultura (di quanto appaia):
+## (Molto più) Radicato nella nostra cultura (di quanto appaia)
+
 ### Excel / Haskell
 
 ![width:600px](img/excel.png).
@@ -183,6 +194,7 @@ class Risultato
 ```
 
 ---
+
 # Funzioni totali / 5
 
 Altre idee: Pattern Null Object
@@ -197,7 +209,6 @@ Implementa un concetto (quasi puramente) funzionale in ambito oop
 
 La composizione può essere vista come un concatenamento
 (es. "pipe")
-
 
 ![width:600px](img/chain-example.jpg).
 
@@ -256,6 +267,7 @@ def chain_functions(...)
 # Side effect / 1
 
 ## Injection
+
 Passare lo "step successivo" come parametro
 
 inject.py
@@ -264,10 +276,10 @@ inject.py
 
 # Side effect / 2
 
-
 ## Sostituzione del side effect con una sua rappresentazione
+
 "Barare e procrastinare"
-    * "Barare" = Di fatto le funzioni non sono pure
+    *"Barare" = Di fatto le funzioni non sono pure
     * "Procrastinare" = Incapsulare in una funzione.
     Un side effect infatti non è tale finché non avviene.
 
@@ -303,15 +315,13 @@ Si vogliono "collegare" pezzi di logica tra loro tenendoli disaccoppiati
 Si vuole dare un workflow orizzontale/sequenziale
 
 ---
+
 # Side effect / 4
 
-
 Tool di concatenamento
-
 
 ---
 
 # Side effect / 5
-
 
 workflow.py
