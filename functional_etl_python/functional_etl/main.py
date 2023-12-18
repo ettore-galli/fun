@@ -3,7 +3,7 @@ import sys
 
 from functional_etl.common.environment import RunEnvironment
 from functional_etl.sources.csv_source import get_source_data
-from functional_etl.sinks.base import EtlOutputDataRecord
+from functional_etl.data.base import EtlOutputDataRecord
 from functional_etl.sinks.csv_output import CsvEtlDataSink
 
 

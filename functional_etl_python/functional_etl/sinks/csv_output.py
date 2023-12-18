@@ -1,7 +1,8 @@
 import csv
 from dataclasses import asdict
 from typing import List
-from functional_etl.sinks.base import EtlDataSink, EtlOutputDataRecord
+from functional_etl.sinks.base import EtlDataSink
+from functional_etl.data.base import EtlOutputDataRecord
 
 
 class CsvEtlDataSink(EtlDataSink):

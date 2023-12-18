@@ -1,7 +1,7 @@
 import csv
 from typing import Generator
 
-from functional_etl.sources.base import EtlSourceDataRecord
+from functional_etl.data.base import EtlSourceDataRecord
 
 
 IRIS_FIELDS = [
