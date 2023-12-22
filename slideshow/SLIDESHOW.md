@@ -22,11 +22,11 @@ style: |
 Una raccolta di idee e spunti
 
 "Pattern is when you do something over and over and give it a name"
-https://vimeo.com/113588389
+<https://vimeo.com/113588389>
 
 ---
 
-# Fonti di ispirazione - 1: Codemotion talk
+## Fonti di ispirazione - 1: Codemotion talk
 
 **Jemima Abu**
 
@@ -38,7 +38,7 @@ Concetti base
 
 ---
 
-# Fonti di ispirazione - 2: Codemotion talk
+## Fonti di ispirazione - 2: Codemotion talk
 
 **Luca Cavallaro**
 
@@ -48,7 +48,7 @@ Funzionale è facile con TypeScript
 
 ---
 
-# Agenda
+## Agenda
 
 * Valori e caratteristiche della programmazione funzionale
 
@@ -60,7 +60,7 @@ Funzionale è facile con TypeScript
 
 ---
 
-# Vantaggi della programmazione funzionale
+## Vantaggi della programmazione funzionale
 
 * Meno errori
 
@@ -70,71 +70,72 @@ Funzionale è facile con TypeScript
 
 ---
 
-# Come e quando usare uno stile funzionale
+## Come e quando usare uno stile funzionale
 
-## Python / JS / Java / Go non sono funzionali puri
+### Python / JS / Java / Go non sono funzionali puri
 
 Non sempre, non necessariamente al 100%
 
-## Per implementare singole sezioni di logica e workflow
+### Per implementare singole sezioni di logica e workflow
 
-## Per implementare workflow e gestire side effect in modo controllato
+### Per implementare workflow e gestire side effect in modo controllato
 
 ---
 
-# Valori / 1
+## Valori / 1
 
-## Funzioni pure
+### Funzioni pure
 
-- Restituiscono sempre e solo valori
+* Restituiscono sempre e solo valori
+
 * **Sostituibili con i valori restituiti**
 
-## Immutabilità dei valori
+### Immutabilità dei valori
 
-## Trasparenza referenziale
+### Trasparenza referenziale
 
 ---
 
-# Valori / 2
+## Valori / 2
 
-## Divide et impera
+### Divide et impera
 
 Funzioni piccole e focalizzate
 
-## Funzioni come entità "first class"
+### Funzioni come entità "first class"
 
 * Argomenti di funzioni
 * Non legate a strutture
 
-## ~~Idealmente nessun side effect~~ Side effect abilmente nascosti
+### ~~Idealmente nessun side effect~~ Side effect abilmente nascosti
 
 ---
 
-# Valori / 3
+## Valori / 3
 
-## Approccio dichiarativo
+### Approccio dichiarativo
 
 Aspetto dichiarativo prevalente.
 
 ---
 
-# Valori / 4
+## Valori / 4
 
-## Composizione di funzioni
+### Composizione di funzioni
 
 La composizione di funzioni sta alla base di tutto
 
-## Best fit con linguaggi fortemente tipizzati
+### Best fit con linguaggi fortemente tipizzati
 
 La composizione ha come prerequisito la compatibilità dei tipi
 
 ---
 
-# Valori / 5
+## Valori / 5
 
-## (Molto più) Radicato nella nostra cultura (di quanto appaia)
+### (Molto più) Radicato nella nostra cultura (di quanto appaia)
 
-### Excel / Haskell
+#### Excel / Haskell
 
 ![width:600px](img/excel.png).
 
@@ -148,7 +149,7 @@ main = putStrLn (risultato 5 4)
 
 ---
 
-# Funzioni "totali" / 1
+## Funzioni "totali" / 1
 
 Definite per tutti i possibili valori di input
 
@@ -159,7 +160,7 @@ def exp2(x):
 
 ---
 
-# Funzioni totali / 2
+## Funzioni totali / 2
 
 Un **contro**esempio
 
@@ -170,7 +171,7 @@ def reciproco(x):
 
 ---
 
-# Funzioni totali / 3
+## Funzioni totali / 3
 
 Metodo 1 : Restringere input
 
@@ -182,7 +183,7 @@ x != 0
 
 ---
 
-# Funzioni totali / 4
+## Funzioni totali / 4
 
 Metodo 2 : Allargare l'output -> Dare un "contesto"
 
@@ -195,7 +196,7 @@ class Risultato
 
 ---
 
-# Funzioni totali / 5
+## Funzioni totali / 5
 
 Altre idee: Pattern Null Object
 
@@ -205,7 +206,7 @@ Implementa un concetto (quasi puramente) funzionale in ambito oop
 
 ---
 
-# Composizione / 1
+## Composizione / 1
 
 La composizione può essere vista come un concatenamento
 (es. "pipe")
@@ -214,7 +215,7 @@ La composizione può essere vista come un concatenamento
 
 ---
 
-# Composizione / 2
+## Composizione / 2
 
 Nel caso di composizioni complesse si ~~vuole~~ può volere evitare una situazione simile alla seguente...
 
@@ -232,7 +233,7 @@ risultato = funzione_n(step_n_meno_1, px, py...)
 
 ---
 
-# Composizione / 3
+## Composizione / 3
 
 ... oppure anche:
 
@@ -252,7 +253,7 @@ risultato = (
 
 ---
 
-# Composizione / 4
+## Composizione / 4
 
 Una possibile soluzione:
 
@@ -264,9 +265,9 @@ def chain_functions(...)
 
 ---
 
-# Side effect / 1
+## Side effect / 1
 
-## Injection
+### Injection
 
 Passare lo "step successivo" come parametro
 
@@ -274,9 +275,9 @@ inject.py
 
 ---
 
-# Side effect / 2
+## Side effect / 2
 
-## Sostituzione del side effect con una sua rappresentazione
+### Sostituzione del side effect con una sua rappresentazione
 
 "Barare e procrastinare"
     *"Barare" = Di fatto le funzioni non sono pure
@@ -285,18 +286,18 @@ inject.py
 
 ---
 
-# Side effect / 2
+## Side effect / 2
 
-## Allargamento dell'output
+### Allargamento dell'output
 
 * Ritornare sempre un valore
 * Ritornare un valore che rappresenta un errore al posto di sollevare un'eccezione
 
 ---
 
-# Side effect / 2
+## Side effect / 2
 
-## Gestione dei side effect
+### Gestione dei side effect
 
 Sostituzione di un side effect con un valore che lo rappresenta (tipicamente una lambda), in modo tale da diventare indistinguibile da esso
 
@@ -306,9 +307,9 @@ Un side effect infatti non è tale finché non avviene.
 
 ---
 
-# Side effect / 3
+## Side effect / 3
 
-## Composizione come concatenamento
+### Composizione come concatenamento
 
 Si vogliono "collegare" pezzi di logica tra loro tenendoli disaccoppiati
 
@@ -316,12 +317,12 @@ Si vuole dare un workflow orizzontale/sequenziale
 
 ---
 
-# Side effect / 4
+## Side effect / 4
 
 Tool di concatenamento
 
 ---
 
-# Side effect / 5
+## Side effect / 5
 
 workflow.py

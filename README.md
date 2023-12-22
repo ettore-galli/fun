@@ -4,7 +4,7 @@ Functional programming
 
 ## service - toy services
 
-```
+```shell
 cd services
 ./start
 ```
