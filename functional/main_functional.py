@@ -3,7 +3,7 @@ from functional.mail_message_core import (
     MailMessage,
     RunEnvironment,
     log_issues,
-    # send_message_utility,
+    send_message_utility,
     validate_message_utility,
 )
 
@@ -34,6 +34,18 @@ def log_step(context: EmailContext) -> EmailContext:
     )
 
 
+def send_step(context: EmailContext) -> EmailContext:
+    send_errors = send_message_utility(
+        run_environment=context.environment, mail_message=context.payload
+    )
+    return context.with_issues(
+        new_issues=[
+            Issue(issue_type=IssueType.ERROR, message=message)
+            for message in send_errors
+        ]
+    )
+
+
 # pylint: disable=duplicate-code
 def send_mail_functional(
     sender: str, recipient: str, subject: str, text: str
@@ -56,30 +68,11 @@ def send_mail_functional(
 
     validation = validation_step(context=context)
 
-    logged = log_step(validation)
+    validation_logged = log_step(validation)
 
-    final = logged
-    # validation_errors = validate_message_utility(mail_message=mail_message)
+    message_sent = send_step(validation_logged)
 
-    # if len(validation_errors) > 0:
-    #     log_errors = log_issues(
-    #         run_environment=run_environment, log_messages=validation_errors
-    #     )
-    #     if len(log_errors) > 0:
-    #         return validation_errors + log_errors
-    #     return validation_errors
-
-    # send_errors = send_message_utility(
-    #     run_environment=run_environment, mail_message=mail_message
-    # )
-
-    # if len(send_errors) > 0:
-    #     log_errors = log_issues(
-    #         run_environment=run_environment, log_messages=validation_errors
-    #     )
-    #     if len(log_errors) > 0:
-    #         return send_errors + log_errors
-    #     return send_errors
+    final = message_sent
 
     return final
 

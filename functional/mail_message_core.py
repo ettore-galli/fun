@@ -34,12 +34,14 @@ def send_message_utility(
 ) -> List[str]:
     if run_environment.smtp_server == "":
         return ["No server"]
+    print("\n", "-" * 78)
     print(
         f"Sending message {mail_message.subject} {mail_message.text} "
         "from {mail_message.sender} "
         "to {mail_message.recipient} "
         "via server {run_environment.smtp_server}"
     )
+    print("\n", "-" * 78)
 
     return []
 
