@@ -39,23 +39,9 @@ class ExecutionContext(Generic[T, U]):
 
 
 # pylint: disable=too-few-public-methods
-class ApplicationFunction(Protocol, Generic[T]):
-    def __call__(self, payload: T) -> T:
-        ...
-
-
-# pylint: disable=too-few-public-methods
 class ComposableApplicationFunction(Protocol):
     def __call__(self, context: ExecutionContext) -> ExecutionContext:
         ...
-
-
-def elevate(
-    application_function: ApplicationFunction, payload: T
-) -> ComposableApplicationFunction:
-    return lambda function: ExecutionContext(
-        environment=None, payload=application_function(payload)
-    )
 
 
 def bind(
