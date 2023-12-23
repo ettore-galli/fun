@@ -50,9 +50,11 @@ def log_issues(
     if run_environment.log_file == "":
         return ["No log file"]
     try:
-        with open(run_environment.log_file, "w", encoding="utf-8") as logfile:
+        with open(run_environment.log_file, "a", encoding="utf-8") as logfile:
             for line in log_messages:
-                logfile.write(f"{datetime.now()}: {line}\n")
+                msg = f"{datetime.now()}: {line}\n"
+                print(msg)
+                logfile.write(msg)
     except Exception as error:  # pylint: disable=broad-exception-caught
         return [str(error)]
 

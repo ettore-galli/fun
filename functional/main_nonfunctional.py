@@ -8,6 +8,7 @@ from functional.mail_message_core import (
 )
 
 
+# pylint: disable=duplicate-code
 def send_mail_nonfunctional(
     sender: str, recipient: str, subject: str, text: str
 ) -> List[str]:
@@ -47,6 +48,7 @@ def send_mail_nonfunctional(
     return []
 
 
+# pylint: disable=duplicate-code
 if __name__ == "__main__":
     print("===== CASE1: (Errors)")
     result_1 = send_mail_nonfunctional(

@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from __future__ import annotations
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Generic, List, Protocol, TypeVar
 
@@ -22,16 +23,22 @@ class Issue:
 class ExecutionContext(Generic[T, U]):
     environment: U
     payload: T
-    errors: List[Issue]
-    log: List[str]
+    issues: List[Issue] = field(default_factory=list)
 
     @property
     def success(self) -> bool:
-        return len(self.errors) == 0
+        return not any(issue.issue_type == IssueType.ERROR for issue in self.issues)
+
+    def with_issues(self, new_issues: List[Issue]) -> ExecutionContext:
+        return ExecutionContext(
+            environment=self.environment,
+            payload=self.payload,
+            issues=self.issues + new_issues,
+        )
 
 
 # pylint: disable=too-few-public-methods
-class ApplicationFunction(Protocol):
+class ApplicationFunction(Protocol, Generic[T]):
     def __call__(self, payload: T) -> T:
         ...
 
@@ -46,5 +53,5 @@ def elevate(
     application_function: ApplicationFunction, payload: T
 ) -> ComposableApplicationFunction:
     return lambda function: ExecutionContext(
-        environment=None, payload=application_function(payload), errors=[], log=[]
+        environment=None, payload=application_function(payload)
     )
