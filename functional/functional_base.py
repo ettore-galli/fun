@@ -5,6 +5,7 @@ from typing import Generic, List, Protocol, TypeVar
 
 T = TypeVar("T")
 U = TypeVar("U")
+C = TypeVar("C")
 
 
 class IssueType(Enum):
@@ -45,7 +46,7 @@ class ApplicationFunction(Protocol, Generic[T]):
 
 # pylint: disable=too-few-public-methods
 class ComposableApplicationFunction(Protocol):
-    def __call__(self, execution_context: ExecutionContext) -> ExecutionContext:
+    def __call__(self, context: ExecutionContext) -> ExecutionContext:
         ...
 
 
@@ -55,3 +56,15 @@ def elevate(
     return lambda function: ExecutionContext(
         environment=None, payload=application_function(payload)
     )
+
+
+def bind(
+    first: ComposableApplicationFunction, second: ComposableApplicationFunction
+) -> ComposableApplicationFunction:
+    def bound_function(context: ExecutionContext) -> ExecutionContext:
+        result = first(context)
+        if result.success:
+            return second(result)
+        return result
+
+    return bound_function

@@ -1,4 +1,4 @@
-from functional.functional_base import ExecutionContext, Issue, IssueType
+from functional.functional_base import ExecutionContext, Issue, IssueType, bind
 from functional.mail_message_core import (
     MailMessage,
     RunEnvironment,
@@ -66,15 +66,13 @@ def send_mail_functional(
         payload=mail_message,
     )
 
-    validation = validation_step(context=context)
+    validation_logged = bind(validation_step, log_step)
 
-    validation_logged = log_step(validation)
+    message_sent = bind(validation_logged, send_step)
 
-    message_sent = send_step(validation_logged)
+    final = bind(message_sent, log_step)
 
-    final = message_sent
-
-    return final
+    return final(context=context)
 
 
 # pylint: disable=duplicate-code
