@@ -1,4 +1,10 @@
-from functional.functional_base import ExecutionContext, Issue, IssueType, bind
+from functional.functional_base import (
+    ExecutionContext,
+    Issue,
+    IssueType,
+    bind,
+    bind_all,
+)
 from functional.mail_message_core import (
     MailMessage,
     RunEnvironment,
@@ -76,6 +82,31 @@ def send_mail_functional(
 
 
 # pylint: disable=duplicate-code
+def send_mail_via_bind_all(
+    sender: str, recipient: str, subject: str, text: str
+) -> EmailContext:
+    mail_message = MailMessage(
+        sender=sender,
+        recipient=recipient,
+        subject=subject,
+        text=text,
+    )
+
+    run_environment: RunEnvironment = RunEnvironment(
+        smtp_server="my-server", log_file="./log.txt"
+    )
+
+    context: EmailContext = EmailContext(
+        environment=run_environment,
+        payload=mail_message,
+    )
+
+    compound = bind_all([validation_step, log_step, send_step, log_step])
+
+    return compound(context=context)
+
+
+# pylint: disable=duplicate-code
 if __name__ == "__main__":
     print("===== CASE1: (Errors)")
     print(
@@ -90,6 +121,16 @@ if __name__ == "__main__":
     print("===== CASE2: (Ok)")
     print(
         send_mail_functional(
+            sender="myself@my.address",
+            recipient="destination@some.address",
+            subject="A Subject",
+            text="A Message...",
+        )
+    )
+
+    print("===== CASE3: (Ok / bind all)")
+    print(
+        send_mail_via_bind_all(
             sender="myself@my.address",
             recipient="destination@some.address",
             subject="A Subject",

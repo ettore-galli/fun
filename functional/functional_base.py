@@ -1,7 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Generic, List, Protocol, TypeVar
+import functools
+from typing import Generic, Iterable, List, Protocol, TypeVar
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -54,3 +55,13 @@ def bind(
         return result
 
     return bound_function
+
+
+def composable_identity(context: ExecutionContext) -> ExecutionContext:
+    return context
+
+
+def bind_all(
+    composables: Iterable[ComposableApplicationFunction],
+) -> ComposableApplicationFunction:
+    return functools.reduce(bind, composables, composable_identity)
