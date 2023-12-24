@@ -1,3 +1,4 @@
+from itertools import tee
 import os
 from typing import Generator, Optional
 from functional.etl_workflow.etl_core import (
@@ -29,13 +30,15 @@ def read_data_step(context: EtlContext) -> EtlContext:
 
 
 def echo_data_step(context: EtlContext) -> EtlContext:
-    echo_data(context.payload or [])
-    return context
+    to_return, to_consume = tee(context.payload or [], 2)
+    echo_data(to_consume)
+    return context.with_payload(new_payload=to_return)
 
 
 def write_csv_data_step(context: EtlContext) -> EtlContext:
-    write_csv_data(context.environment.out_file, context.payload or [])
-    return context
+    to_return, to_consume = tee(context.payload or [], 2)
+    write_csv_data(context.environment.out_file, to_consume)
+    return context.with_payload(new_payload=to_return)
 
 
 def etl_workflow_main():
