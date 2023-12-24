@@ -5,7 +5,7 @@ from functional.functional_tools.composing import (
     bind,
     bind_all,
 )
-from functional.mail_message_core import (
+from functional.mail_workflow.mail_message_core import (
     MailMessage,
     RunEnvironment,
     log_issues,

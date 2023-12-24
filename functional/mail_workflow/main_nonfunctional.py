@@ -1,5 +1,5 @@
 from typing import List
-from functional.mail_message_core import (
+from functional.mail_workflow.mail_message_core import (
     MailMessage,
     RunEnvironment,
     log_issues,
