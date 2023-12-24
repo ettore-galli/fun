@@ -1,6 +1,6 @@
 import csv
-from dataclasses import dataclass
-from typing import Generator, Iterable, Optional
+from dataclasses import dataclass, asdict, fields
+from typing import Generator, Iterable, List, Optional
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -32,9 +32,25 @@ IRIS_FIELDS = [
 ]
 
 
+# pylint: disable=too-many-instance-attributes
+@dataclass(frozen=True)
+class EtlOutputDataRecord:
+    sepal_length: Optional[float] = None
+    sepal_width: Optional[float] = None
+    petal_length: Optional[float] = None
+    petal_width: Optional[float] = None
+    avg_sepal_length: Optional[float] = None
+    avg_sepal_width: Optional[float] = None
+    avg_petal_length: Optional[float] = None
+    avg_petal_width: Optional[float] = None
+    is_probably_outlier: Optional[bool] = False
+    iris_class: Optional[str] = None
+
+
 @dataclass(frozen=True)
 class RunEnvironment:
     input_file: str
+    out_file: str
     log_file: str
 
 
@@ -51,3 +67,14 @@ def get_source_data(file_fqn: str) -> Generator[EtlSourceDataRecord, None, None]
 def echo_data(data: Iterable[EtlSourceDataRecord]) -> None:
     for item in data:
         print(item)
+
+
+def write_csv_data(out_file: str, data: Iterable[EtlSourceDataRecord]) -> None:
+    fieldnames: List[str] = [field.name for field in fields(EtlOutputDataRecord)]
+
+    with open(out_file, mode="w", encoding="utf-8") as out_csv_file:
+        writer = csv.DictWriter(f=out_csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for record in data:
+            writer.writerow(asdict(record))
