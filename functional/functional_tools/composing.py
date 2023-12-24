@@ -38,6 +38,13 @@ class ExecutionContext(Generic[T, U]):
             issues=self.issues + new_issues,
         )
 
+    def with_payload(self, new_payload: T) -> ExecutionContext:
+        return ExecutionContext(
+            environment=self.environment,
+            payload=new_payload,
+            issues=self.issues,
+        )
+
 
 # pylint: disable=too-few-public-methods
 class ComposableApplicationFunction(Protocol):
