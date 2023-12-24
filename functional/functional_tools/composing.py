@@ -6,7 +6,6 @@ from typing import Generic, Iterable, List, Protocol, TypeVar
 
 T = TypeVar("T")
 U = TypeVar("U")
-C = TypeVar("C")
 
 
 class IssueType(Enum):

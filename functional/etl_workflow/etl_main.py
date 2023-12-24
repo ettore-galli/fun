@@ -1,6 +1,6 @@
 from itertools import tee
 import os
-from typing import Generator, Optional
+from typing import Iterator, Optional
 from functional.etl_workflow.etl_core import (
     EtlSourceDataRecord,
     RunEnvironment,
@@ -15,7 +15,7 @@ from functional.functional_tools.composing import (
     bind_all,
 )
 
-EtlContextPayload = Optional[Generator[EtlSourceDataRecord, None, None]]
+EtlContextPayload = Optional[Iterator[EtlSourceDataRecord]]
 EtlContext = ExecutionContext[EtlContextPayload, RunEnvironment]
 
 
