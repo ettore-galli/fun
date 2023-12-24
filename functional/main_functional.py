@@ -1,4 +1,4 @@
-from functional.functional_base import (
+from functional.functional_tools.composing import (
     ExecutionContext,
     Issue,
     IssueType,

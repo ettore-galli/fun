@@ -1,6 +1,6 @@
 from typing import Dict
 from unittest.mock import MagicMock, call
-from functional.functional_base import ExecutionContext, bind, bind_all
+from functional.functional_tools.composing import ExecutionContext, bind, bind_all
 
 
 def test_bind():
