@@ -1,6 +1,6 @@
 import csv
 from dataclasses import dataclass, asdict, fields
-from typing import Generator, Iterable, List, Optional
+from typing import Any, Generator, Iterable, List, Optional
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -62,6 +62,35 @@ def get_source_data(file_fqn: str) -> Generator[EtlSourceDataRecord, None, None]
         reader = csv.DictReader(csvfile, fieldnames=IRIS_FIELDS)
         for row in reader:
             yield EtlSourceDataRecord(**dict(row))
+
+
+def float_or_zero(candidate: Any):
+    try:
+        return float(candidate)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def process_record(record: EtlSourceDataRecord) -> EtlSourceDataRecord:
+    return EtlSourceDataRecord(
+        **{
+            **asdict(record),
+            **{
+                "sepal_length": 10 * float_or_zero(record.sepal_length),
+                "sepal_width": 10 * float_or_zero(record.sepal_width),
+                "petal_length": 10 * float_or_zero(record.petal_length),
+                "petal_width": 10 * float_or_zero(record.petal_width),
+                "iris_class": str(record.iris_class).upper(),
+            },
+        }
+    )
+
+
+def preprocess_data(
+    data: Iterable[EtlSourceDataRecord],
+) -> Generator[EtlSourceDataRecord, None, None]:
+    for item in data:
+        yield process_record(item)
 
 
 def echo_data(data: Iterable[EtlSourceDataRecord]) -> None:

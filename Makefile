@@ -7,8 +7,8 @@ test:
 
 lint:
 	@echo "===== LINTING ${PACKAGE} ====="
-	flake8 ${PACKAGE} tests/
 	black -t py311 ${PACKAGE} tests/
+	flake8 ${PACKAGE} tests/
 	pylint ${PACKAGE} tests/
 	mypy ${PACKAGE} tests/
 

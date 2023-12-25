@@ -6,6 +6,7 @@ from functional.etl_workflow.etl_core import (
     RunEnvironment,
     echo_data,
     get_source_data,
+    preprocess_data,
     write_csv_data,
 )
 from functional.functional_tools.composing import (
@@ -35,6 +36,10 @@ def echo_data_step(context: EtlContext) -> EtlContext:
     return context.with_payload(new_payload=to_return)
 
 
+def preprocess_data_step(context: EtlContext) -> EtlContext:
+    return context.with_payload(new_payload=preprocess_data(context.payload or []))
+
+
 def write_csv_data_step(context: EtlContext) -> EtlContext:
     to_return, to_consume = tee(context.payload or [], 2)
     write_csv_data(context.environment.out_file, to_consume)
@@ -52,7 +57,9 @@ def etl_workflow_main():
         payload=None,
     )
 
-    workflow = bind_all([read_data_step, echo_data_step, write_csv_data_step])
+    workflow = bind_all(
+        [read_data_step, echo_data_step, preprocess_data_step, write_csv_data_step]
+    )
 
     workflow(context=context)
 
