@@ -1,6 +1,6 @@
 import csv
 from dataclasses import dataclass, asdict, fields
-from typing import Any, Generator, Iterable, List, Optional
+from typing import Any, Callable, Generator, Iterable, List, Optional
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -91,6 +91,17 @@ def preprocess_data(
 ) -> Generator[EtlSourceDataRecord, None, None]:
     for item in data:
         yield process_record(item)
+
+
+def select_valid_records(
+    data: Iterable[EtlSourceDataRecord],
+    discarded_record_hook: Callable[[EtlSourceDataRecord], None],
+) -> Generator[EtlSourceDataRecord, None, None]:
+    for record in data:
+        if float(record.sepal_length or 0) < 80.0:
+            yield record
+        else:
+            discarded_record_hook(record)
 
 
 def echo_data(data: Iterable[EtlSourceDataRecord]) -> None:
