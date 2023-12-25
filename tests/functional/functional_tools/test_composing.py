@@ -1,6 +1,15 @@
-from typing import Dict
+from typing import Dict, Generator
 from unittest.mock import MagicMock, call
-from functional.functional_tools.composing import ExecutionContext, bind, bind_all
+from functional.functional_tools.composing import (
+    ExecutionContext,
+    Issue,
+    IssueType,
+    ItemProcessingResult,
+    StreamExecutionContext,
+    bind,
+    bind_all,
+    bind_stream_all,
+)
 
 
 def test_bind():
@@ -45,3 +54,64 @@ def test_bind_all():
     assert function_b_calls == [
         call(ExecutionContext(environment={"a": 1}, payload={"x": 3}, issues=[]))
     ]
+
+
+def test_bind_stream():
+    ExampleItemProcessingResult = ItemProcessingResult[str]
+    ExampleStreamExecutionContext = StreamExecutionContext[
+        Dict, ExampleItemProcessingResult
+    ]
+
+    def data_source() -> Generator[str, None, None]:
+        return (str(100 + item) for item in range(10))
+
+    def source_step(
+        context: ExampleStreamExecutionContext,
+    ) -> ExampleStreamExecutionContext:
+        return ExampleStreamExecutionContext(
+            environment=context.environment,
+            stream=(
+                ItemProcessingResult(item=element, issues=[])
+                for element in data_source()
+            ),
+        )
+
+    def process_step(
+        context: ExampleStreamExecutionContext,
+    ) -> ExampleStreamExecutionContext:
+        return ExampleStreamExecutionContext(
+            environment=context.environment,
+            stream=(
+                ExampleItemProcessingResult(
+                    item=f"**{element.item}**", issues=element.issues
+                )
+                for element in context.stream or []
+            ),
+        )
+
+    def filter_step(
+        context: ExampleStreamExecutionContext,
+    ) -> ExampleStreamExecutionContext:
+        return ExampleStreamExecutionContext(
+            environment=context.environment,
+            stream=(
+                ExampleItemProcessingResult(
+                    item=element.item,
+                    issues=element.issues + []
+                    if "7" not in element.item
+                    else [
+                        Issue(
+                            issue_type=IssueType.ERROR,
+                            message=f"Discarded: {element.item}",
+                        )
+                    ],
+                )
+                for element in context.stream or []
+            ),
+        )
+
+    compound = bind_stream_all([source_step, filter_step, process_step])
+
+    result = compound(StreamExecutionContext(environment={}))
+
+    print(list(result.stream or []))
