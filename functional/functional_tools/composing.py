@@ -55,43 +55,6 @@ class ComposableApplicationFunction(Protocol):
         ...
 
 
-@dataclass(frozen=True)
-class ItemProcessingResult(Generic[T]):
-    item: T
-    issues: List[Issue]
-
-    @property
-    def success(self) -> bool:
-        return not any(issue.issue_type == IssueType.ERROR for issue in self.issues)
-
-
-@dataclass(frozen=True)
-class StreamExecutionContext(Generic[U, S]):
-    environment: U
-    stream: Optional[Iterable[S]] = None
-    # global_result: G
-
-
-#     @property
-#     def success(self) -> bool:
-#         return not any(issue.issue_type == IssueType.ERROR for issue in self.issues)
-
-#     def with_issues(self, new_issues: List[Issue]) -> ExecutionContext:
-#         return ExecutionContext(
-#             environment=self.environment,
-#             payload=self.payload,
-#             issues=self.issues + new_issues,
-#             new_issues=new_issues,
-#         )
-
-#     def with_payload(self, new_payload: T) -> ExecutionContext:
-#         return ExecutionContext(
-#             environment=self.environment,
-#             payload=new_payload,
-#             issues=self.issues,
-#         )
-
-
 # pylint: disable=too-few-public-methods
 class ComposableStreamApplicationFunction(Protocol):
     def __call__(self, context: StreamExecutionContext) -> StreamExecutionContext:
@@ -118,6 +81,22 @@ def bind_all(
     composables: Iterable[ComposableApplicationFunction],
 ) -> ComposableApplicationFunction:
     return functools.reduce(bind, composables, composable_identity)
+
+
+@dataclass(frozen=True)
+class ItemProcessingResult(Generic[T]):
+    item: T
+    issues: List[Issue]
+
+    @property
+    def success(self) -> bool:
+        return not any(issue.issue_type == IssueType.ERROR for issue in self.issues)
+
+
+@dataclass(frozen=True)
+class StreamExecutionContext(Generic[U, S]):
+    environment: U
+    stream: Optional[Iterable[S]] = None
 
 
 def composable_identity_stream(
