@@ -25,6 +25,7 @@ class ExecutionContext(Generic[T, U]):
     environment: U
     payload: T
     issues: List[Issue] = field(default_factory=list)
+    new_issues: List[Issue] = field(default_factory=list)
 
     @property
     def success(self) -> bool:
@@ -35,6 +36,7 @@ class ExecutionContext(Generic[T, U]):
             environment=self.environment,
             payload=self.payload,
             issues=self.issues + new_issues,
+            new_issues=new_issues,
         )
 
     def with_payload(self, new_payload: T) -> ExecutionContext:

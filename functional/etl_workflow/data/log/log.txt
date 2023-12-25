@@ -1,0 +1,1 @@
+2023-12-25 19:08:00.909346: Discarded {'sepal_length': 81.0, 'sepal_width': 32.0, 'petal_length': 47.0, 'petal_width': 14.0, 'iris_class': 'IRIS-VERSICOLOR'}

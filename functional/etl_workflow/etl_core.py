@@ -1,6 +1,9 @@
 import csv
 from dataclasses import dataclass, asdict, fields
-from typing import Any, Callable, Generator, Iterable, List, Optional
+from datetime import datetime
+from typing import Any, Generator, Iterable, List, Optional, Tuple
+
+from functional.functional_tools.composing import Issue, IssueType
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -95,18 +98,33 @@ def preprocess_data(
 
 def select_valid_records(
     data: Iterable[EtlSourceDataRecord],
-    discarded_record_hook: Callable[[EtlSourceDataRecord], None],
-) -> Generator[EtlSourceDataRecord, None, None]:
+) -> Generator[Tuple[Optional[EtlSourceDataRecord], Optional[Issue]], None, None]:
     for record in data:
         if float(record.sepal_length or 0) < 80.0:
-            yield record
+            yield record, None
         else:
-            discarded_record_hook(record)
+            yield None, Issue(
+                issue_type=IssueType.WARNING, message=f"Discarded {asdict(record)}"
+            )
 
 
 def echo_data(data: Iterable[EtlSourceDataRecord]) -> None:
     for item in data:
         print(item)
+
+
+def log_issues(run_environment: RunEnvironment, issues: Iterable[Issue]) -> List[Issue]:
+    if run_environment.log_file == "":
+        return [Issue(issue_type=IssueType.ERROR, message="No log file")]
+    try:
+        with open(run_environment.log_file, "a", encoding="utf-8") as logfile:
+            for issue in issues:
+                msg = f"{datetime.now()}: {issue.message}\n"
+                logfile.write(msg)
+    except Exception as error:  # pylint: disable=broad-exception-caught
+        return [Issue(issue_type=IssueType.ERROR, message=str(error))]
+
+    return []
 
 
 def write_csv_data(out_file: str, data: Iterable[EtlSourceDataRecord]) -> None:

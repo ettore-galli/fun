@@ -1,12 +1,12 @@
-from dataclasses import asdict
 from itertools import tee
 import os
-from typing import Iterator, List, Optional
+from typing import Iterator, Optional
 from functional.etl_workflow.etl_core import (
     EtlSourceDataRecord,
     RunEnvironment,
     echo_data,
     get_source_data,
+    log_issues,
     preprocess_data,
     select_valid_records,
     write_csv_data,
@@ -43,18 +43,19 @@ def preprocess_data_step(context: EtlContext) -> EtlContext:
 
 
 def select_records_step(context: EtlContext) -> EtlContext:
-    issues: List[Issue] = []
+    results = select_valid_records(data=context.payload or [])
 
-    def discarded_record_hook(record):
-        issues.append(
-            Issue(issue_type=IssueType.WARNING, message=f"Discarded {asdict(record)}")
-        )
-
+    return_results, issue_results = tee(results, 2)
     return context.with_payload(
-        new_payload=select_valid_records(
-            data=context.payload or [], discarded_record_hook=discarded_record_hook
-        )
+        new_payload=(result[0] for result in return_results if result[0] is not None)
+    ).with_issues(
+        new_issues=[result[1] for result in issue_results if result[1] is not None]
     )
+
+
+def log_issues_step(context: EtlContext) -> EtlContext:
+    log_issues(run_environment=context.environment, issues=context.new_issues)
+    return context
 
 
 def write_csv_data_step(context: EtlContext) -> EtlContext:
@@ -80,6 +81,7 @@ def etl_workflow_main():
             echo_data_step,
             preprocess_data_step,
             select_records_step,
+            log_issues_step,
             write_csv_data_step,
         ]
     )
