@@ -131,19 +131,40 @@ class QueueExecutionContext(Generic[U, S]):
     output_stream: queue.Queue[S] = queue.Queue()
 
 
+@dataclass(frozen=True)
+class ItemProcessingContext(Generic[U, T]):
+    environment: U
+    item: T
+    issues: List[Issue]
+
+    @property
+    def success(self) -> bool:
+        return not any(issue.issue_type == IssueType.ERROR for issue in self.issues)
+
+
 # pylint: disable=too-few-public-methods
 class QueueApplicationFunction(Protocol):
     def __call__(self, context: StreamExecutionContext) -> StreamExecutionContext:
         ...
 
 
+# pylint: disable=too-few-public-methods
+class QueueItemProcessor(Protocol):
+    def __call__(
+        self, item_processing_context: ItemProcessingContext
+    ) -> ItemProcessingContext:
+        ...
+
+
 def stream_processing(
-    context: QueueExecutionContext, source: Iterable[ItemProcessingResult]
+    context: QueueExecutionContext,
+    source: Iterable[ItemProcessingContext],
+    item_processor: QueueItemProcessor,
 ) -> QueueExecutionContext:
     def process_elements():
         while True:
             item = context.input_stream.get()
-            print(item)
+            item_processor(item)
             context.input_stream.task_done()
 
     threading.Thread(target=process_elements, daemon=True).start()

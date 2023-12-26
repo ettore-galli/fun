@@ -6,6 +6,7 @@ from functional.functional_tools.composing import (
     ExecutionContext,
     Issue,
     IssueType,
+    ItemProcessingContext,
     ItemProcessingResult,
     QueueExecutionContext,
     StreamExecutionContext,
@@ -137,12 +138,28 @@ def test_bind_stream():
 
 
 def test_stream_processing():
-    def data_source() -> Generator[ItemProcessingResult, None, None]:
+    def data_source() -> Generator[ItemProcessingContext, None, None]:
         return (
-            ItemProcessingResult(item=str(100 + item), issues=[]) for item in range(10)
+            ItemProcessingContext[Dict, str](
+                item=str(100 + item), issues=[], environment={}
+            )
+            for item in range(10)
         )
 
-    strt_context = QueueExecutionContext[Dict, ItemProcessingResult](environment={})
-    context = stream_processing(context=strt_context, source=data_source())
+    def item_processor(
+        item_processing_context: ItemProcessingContext,
+    ) -> ItemProcessingContext:
+        result_context = ItemProcessingContext(
+            environment=item_processing_context.environment,
+            item=f"==>{item_processing_context.item}<==",
+            issues=item_processing_context.issues,
+        )
+        print(f"{item_processing_context.item} ==> {result_context.item}")
+        return result_context
+
+    strt_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+    context = stream_processing(
+        context=strt_context, source=data_source(), item_processor=item_processor
+    )
 
     print(context)
