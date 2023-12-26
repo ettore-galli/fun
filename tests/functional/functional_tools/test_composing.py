@@ -56,12 +56,13 @@ def test_bind_all():
     ]
 
 
-def test_bind_stream():
-    ExampleItemProcessingResult = ItemProcessingResult[str]
-    ExampleStreamExecutionContext = StreamExecutionContext[
-        Dict, ExampleItemProcessingResult
-    ]
+ExampleItemProcessingResult = ItemProcessingResult[str]
+ExampleStreamExecutionContext = StreamExecutionContext[
+    Dict, ExampleItemProcessingResult
+]
 
+
+def test_bind_stream():
     def data_source() -> Generator[str, None, None]:
         return (str(100 + item) for item in range(10))
 
@@ -114,4 +115,18 @@ def test_bind_stream():
 
     result = compound(StreamExecutionContext(environment={}))
 
-    print(list(result.stream or []))
+    assert list(result.stream or []) == [
+        ItemProcessingResult(item="**100**", issues=[]),
+        ItemProcessingResult(item="**101**", issues=[]),
+        ItemProcessingResult(item="**102**", issues=[]),
+        ItemProcessingResult(item="**103**", issues=[]),
+        ItemProcessingResult(item="**104**", issues=[]),
+        ItemProcessingResult(item="**105**", issues=[]),
+        ItemProcessingResult(item="**106**", issues=[]),
+        ItemProcessingResult(
+            item="**107**",
+            issues=[Issue(issue_type=IssueType.ERROR, message="Discarded: 107")],
+        ),
+        ItemProcessingResult(item="**108**", issues=[]),
+        ItemProcessingResult(item="**109**", issues=[]),
+    ]
