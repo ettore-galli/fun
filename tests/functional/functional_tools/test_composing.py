@@ -1,4 +1,6 @@
-import threading
+import functools
+from queue import Empty
+
 from typing import Dict, Generator, List
 from unittest.mock import MagicMock, call
 
@@ -14,6 +16,7 @@ from functional.functional_tools.composing import (
     bind,
     bind_all,
     bind_stream_all,
+    bind_stream_processing,
     stream_lift,
     stream_processing,
 )
@@ -148,20 +151,18 @@ def test_stream_lift():
             for item in range(10)
         )
 
-    strt_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+    start_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
 
-    context = stream_lift(context=strt_context, source=data_source())
-
-    def read_items(items: List[str]):
-        while True:
-            element: ItemProcessingResult = context.input_stream.get()
-            items.append(element.item)
-            context.input_stream.task_done()
+    result_context = stream_lift(context=start_context, source=data_source())
 
     items: List[str] = []
-    threading.Thread(target=read_items, daemon=True, args=[items]).start()
 
-    context.input_stream.join()
+    while True:
+        try:
+            element: ItemProcessingResult = result_context.output_stream.get_nowait()
+            items.append(element.item)
+        except Empty:
+            break
 
     assert items == [
         "100",
@@ -186,7 +187,7 @@ def test_stream_processing():
             for item in range(10)
         )
 
-    def item_processor(
+    def item_processor_1(
         item_processing_context: ItemProcessingContext,
     ) -> ItemProcessingContext:
         result_context = ItemProcessingContext(
@@ -194,25 +195,50 @@ def test_stream_processing():
             item=f"<<<{item_processing_context.item}>>>",
             issues=item_processing_context.issues,
         )
-        print(result_context.item)
         return result_context
 
-    # def item_processor_2(
-    #     item_processing_context: ItemProcessingContext,
-    # ) -> ItemProcessingContext:
-    #     result_context = ItemProcessingContext(
-    #         environment=item_processing_context.environment,
-    #         item=f"***{item_processing_context.item}***",
-    #         issues=item_processing_context.issues,
-    #     )
-    #     return result_context
+    def item_processor_2(
+        item_processing_context: ItemProcessingContext,
+    ) -> ItemProcessingContext:
+        result_context = ItemProcessingContext(
+            environment=item_processing_context.environment,
+            item=f"***{item_processing_context.item}***",
+            issues=item_processing_context.issues,
+        )
+        return result_context
 
-    strt_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
-
-    context = stream_processing(
-        context=strt_context, source=data_source(), item_processor=item_processor
+    bound_stream_processes = bind_stream_processing(
+        functools.partial(
+            stream_processing, item_processor=item_processor_1, source=data_source()
+        ),
+        functools.partial(
+            stream_processing, item_processor=item_processor_2, source=None
+        ),
     )
 
-    # double_stream = bind_stream_processing()
+    start_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
 
-    print(context)
+    result_context = bound_stream_processes(start_context)
+
+    items: List[str] = []
+
+    while True:
+        try:
+            element: ItemProcessingResult = result_context.output_stream.get_nowait()
+            items.append(element.item)
+            result_context.output_stream.task_done()
+        except Empty:
+            break
+
+    assert items == [
+        "***<<<100>>>***",
+        "***<<<101>>>***",
+        "***<<<102>>>***",
+        "***<<<103>>>***",
+        "***<<<104>>>***",
+        "***<<<105>>>***",
+        "***<<<106>>>***",
+        "***<<<107>>>***",
+        "***<<<108>>>***",
+        "***<<<109>>>***",
+    ]

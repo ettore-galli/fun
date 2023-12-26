@@ -158,20 +158,21 @@ class QueueApplicationFunction(Protocol):
 
 def stream_processing(
     context: QueueExecutionContext,
-    source: Iterable[ItemProcessingContext],
+    source: Optional[Iterable[ItemProcessingContext]],
     item_processor: QueueItemProcessor,
 ) -> QueueExecutionContext:
     def process_elements():
         while True:
             item = context.input_stream.get()
-            item_processor(item)
-            context.output_stream.put(item)
+            processed_item = item_processor(item)
+            context.output_stream.put(processed_item)
             context.input_stream.task_done()
 
     threading.Thread(target=process_elements, daemon=True).start()
 
-    for element in source:
-        context.input_stream.put(element)
+    if source:
+        for element in source:
+            context.input_stream.put(element)
 
     context.input_stream.join()
 
@@ -196,11 +197,17 @@ def stream_lift(
     )
 
 
-# def bind_stream_processing(
-#     first: QueueApplicationFunction, second: QueueApplicationFunction
-# ) -> QueueApplicationFunction:
-#     def bound_function(context: ExecutionContext) -> ExecutionContext:
-#         result = first(context)
-#         return second(result)
+def bind_stream_processing(
+    first: QueueApplicationFunction, second: QueueApplicationFunction
+) -> QueueApplicationFunction:
+    def bound_function(context: QueueExecutionContext) -> QueueExecutionContext:
+        result = first(context)
+        return second(
+            QueueExecutionContext(
+                environment=result.environment,
+                input_stream=result.output_stream,
+                output_stream=queue.Queue(),
+            )
+        )
 
-#     return bound_function
+    return bound_function
