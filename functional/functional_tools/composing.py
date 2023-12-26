@@ -193,7 +193,9 @@ def stream_lift(
         context=context, source=source, item_processor=identity_processor
     )
     return QueueExecutionContext(
-        environment=context.environment, input_stream=context.output_stream
+        environment=context.environment,
+        input_stream=context.output_stream,
+        output_stream=queue.Queue(),
     )
 
 

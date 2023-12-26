@@ -159,7 +159,7 @@ def test_stream_lift():
 
     while True:
         try:
-            element: ItemProcessingResult = result_context.output_stream.get_nowait()
+            element: ItemProcessingResult = result_context.input_stream.get_nowait()
             items.append(element.item)
         except Empty:
             break
@@ -192,7 +192,7 @@ def test_stream_processing():
     ) -> ItemProcessingContext:
         result_context = ItemProcessingContext(
             environment=item_processing_context.environment,
-            item=f"<<<{item_processing_context.item}>>>",
+            item=f"=1={item_processing_context.item}=1=",
             issues=item_processing_context.issues,
         )
         return result_context
@@ -202,7 +202,7 @@ def test_stream_processing():
     ) -> ItemProcessingContext:
         result_context = ItemProcessingContext(
             environment=item_processing_context.environment,
-            item=f"***{item_processing_context.item}***",
+            item=f"=2={item_processing_context.item}=2=",
             issues=item_processing_context.issues,
         )
         return result_context
@@ -231,14 +231,14 @@ def test_stream_processing():
             break
 
     assert items == [
-        "***<<<100>>>***",
-        "***<<<101>>>***",
-        "***<<<102>>>***",
-        "***<<<103>>>***",
-        "***<<<104>>>***",
-        "***<<<105>>>***",
-        "***<<<106>>>***",
-        "***<<<107>>>***",
-        "***<<<108>>>***",
-        "***<<<109>>>***",
+        "=2==1=100=1==2=",
+        "=2==1=101=1==2=",
+        "=2==1=102=1==2=",
+        "=2==1=103=1==2=",
+        "=2==1=104=1==2=",
+        "=2==1=105=1==2=",
+        "=2==1=106=1==2=",
+        "=2==1=107=1==2=",
+        "=2==1=108=1==2=",
+        "=2==1=109=1==2=",
     ]
