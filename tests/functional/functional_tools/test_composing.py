@@ -151,7 +151,9 @@ def test_stream_lift():
             for item in range(10)
         )
 
-    start_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+    start_context = QueueExecutionContext[Dict, ItemProcessingContext](
+        environment={}, input_stream=queue.Queue(), output_stream=queue.Queue()
+    )
 
     result_context = stream_lift(context=start_context, source=data_source())
 

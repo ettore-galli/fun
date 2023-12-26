@@ -127,8 +127,8 @@ def bind_stream_all(
 @dataclass(frozen=True)
 class QueueExecutionContext(Generic[U, S]):
     environment: U
-    input_stream: queue.Queue[S] = queue.Queue()
-    output_stream: queue.Queue[S] = queue.Queue()
+    input_stream: queue.Queue[S]
+    output_stream: queue.Queue[S]
 
 
 @dataclass(frozen=True)
