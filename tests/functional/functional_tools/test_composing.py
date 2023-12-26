@@ -1,4 +1,5 @@
-from typing import Dict, Generator
+import threading
+from typing import Dict, Generator, List
 from unittest.mock import MagicMock, call
 
 
@@ -13,6 +14,7 @@ from functional.functional_tools.composing import (
     bind,
     bind_all,
     bind_stream_all,
+    stream_lift,
     stream_processing,
 )
 
@@ -137,6 +139,44 @@ def test_bind_stream():
     ]
 
 
+def test_stream_lift():
+    def data_source() -> Generator[ItemProcessingContext, None, None]:
+        return (
+            ItemProcessingContext[Dict, str](
+                item=str(100 + item), issues=[], environment={}
+            )
+            for item in range(10)
+        )
+
+    strt_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+
+    context = stream_lift(context=strt_context, source=data_source())
+
+    def read_items(items: List[str]):
+        while True:
+            element: ItemProcessingResult = context.input_stream.get()
+            items.append(element.item)
+            context.input_stream.task_done()
+
+    items: List[str] = []
+    threading.Thread(target=read_items, daemon=True, args=[items]).start()
+
+    context.input_stream.join()
+
+    assert items == [
+        "100",
+        "101",
+        "102",
+        "103",
+        "104",
+        "105",
+        "106",
+        "107",
+        "108",
+        "109",
+    ]
+
+
 def test_stream_processing():
     def data_source() -> Generator[ItemProcessingContext, None, None]:
         return (
@@ -151,15 +191,28 @@ def test_stream_processing():
     ) -> ItemProcessingContext:
         result_context = ItemProcessingContext(
             environment=item_processing_context.environment,
-            item=f"==>{item_processing_context.item}<==",
+            item=f"<<<{item_processing_context.item}>>>",
             issues=item_processing_context.issues,
         )
-        print(f"{item_processing_context.item} ==> {result_context.item}")
+        print(result_context.item)
         return result_context
 
+    # def item_processor_2(
+    #     item_processing_context: ItemProcessingContext,
+    # ) -> ItemProcessingContext:
+    #     result_context = ItemProcessingContext(
+    #         environment=item_processing_context.environment,
+    #         item=f"***{item_processing_context.item}***",
+    #         issues=item_processing_context.issues,
+    #     )
+    #     return result_context
+
     strt_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+
     context = stream_processing(
         context=strt_context, source=data_source(), item_processor=item_processor
     )
+
+    # double_stream = bind_stream_processing()
 
     print(context)

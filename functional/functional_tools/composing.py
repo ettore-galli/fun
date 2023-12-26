@@ -143,16 +143,16 @@ class ItemProcessingContext(Generic[U, T]):
 
 
 # pylint: disable=too-few-public-methods
-class QueueApplicationFunction(Protocol):
-    def __call__(self, context: StreamExecutionContext) -> StreamExecutionContext:
-        ...
-
-
-# pylint: disable=too-few-public-methods
 class QueueItemProcessor(Protocol):
     def __call__(
         self, item_processing_context: ItemProcessingContext
     ) -> ItemProcessingContext:
+        ...
+
+
+# pylint: disable=too-few-public-methods
+class QueueApplicationFunction(Protocol):
+    def __call__(self, context: QueueExecutionContext) -> QueueExecutionContext:
         ...
 
 
@@ -165,6 +165,7 @@ def stream_processing(
         while True:
             item = context.input_stream.get()
             item_processor(item)
+            context.output_stream.put(item)
             context.input_stream.task_done()
 
     threading.Thread(target=process_elements, daemon=True).start()
@@ -175,3 +176,31 @@ def stream_processing(
     context.input_stream.join()
 
     return context
+
+
+def identity_processor(
+    item_processing_context: ItemProcessingContext,
+) -> ItemProcessingContext:
+    return item_processing_context
+
+
+def stream_lift(
+    context: QueueExecutionContext,
+    source: Iterable[ItemProcessingContext],
+) -> QueueExecutionContext:
+    context = stream_processing(
+        context=context, source=source, item_processor=identity_processor
+    )
+    return QueueExecutionContext(
+        environment=context.environment, input_stream=context.output_stream
+    )
+
+
+# def bind_stream_processing(
+#     first: QueueApplicationFunction, second: QueueApplicationFunction
+# ) -> QueueApplicationFunction:
+#     def bound_function(context: ExecutionContext) -> ExecutionContext:
+#         result = first(context)
+#         return second(result)
+
+#     return bound_function
