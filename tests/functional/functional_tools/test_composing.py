@@ -1,14 +1,18 @@
 from typing import Dict, Generator
 from unittest.mock import MagicMock, call
+
+
 from functional.functional_tools.composing import (
     ExecutionContext,
     Issue,
     IssueType,
     ItemProcessingResult,
+    QueueExecutionContext,
     StreamExecutionContext,
     bind,
     bind_all,
     bind_stream_all,
+    stream_processing,
 )
 
 
@@ -130,3 +134,15 @@ def test_bind_stream():
         ItemProcessingResult(item="**108**", issues=[]),
         ItemProcessingResult(item="**109**", issues=[]),
     ]
+
+
+def test_stream_processing():
+    def data_source() -> Generator[ItemProcessingResult, None, None]:
+        return (
+            ItemProcessingResult(item=str(100 + item), issues=[]) for item in range(10)
+        )
+
+    strt_context = QueueExecutionContext[Dict, ItemProcessingResult](environment={})
+    context = stream_processing(context=strt_context, source=data_source())
+
+    print(context)
