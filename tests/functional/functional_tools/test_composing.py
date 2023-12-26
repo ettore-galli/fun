@@ -1,5 +1,5 @@
 import functools
-from queue import Empty
+import queue
 
 from typing import Dict, Generator, List
 from unittest.mock import MagicMock, call
@@ -161,7 +161,7 @@ def test_stream_lift():
         try:
             element: ItemProcessingResult = result_context.input_stream.get_nowait()
             items.append(element.item)
-        except Empty:
+        except queue.Empty:
             break
 
     assert items == [
@@ -216,7 +216,9 @@ def test_stream_processing():
         ),
     )
 
-    start_context = QueueExecutionContext[Dict, ItemProcessingContext](environment={})
+    start_context = QueueExecutionContext[Dict, ItemProcessingContext](
+        environment={}, input_stream=queue.Queue(), output_stream=queue.Queue()
+    )
 
     result_context = bound_stream_processes(start_context)
 
@@ -227,7 +229,7 @@ def test_stream_processing():
             element: ItemProcessingResult = result_context.output_stream.get_nowait()
             items.append(element.item)
             result_context.output_stream.task_done()
-        except Empty:
+        except queue.Empty:
             break
 
     assert items == [

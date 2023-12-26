@@ -203,7 +203,13 @@ def bind_stream_processing(
     first: QueueApplicationFunction, second: QueueApplicationFunction
 ) -> QueueApplicationFunction:
     def bound_function(context: QueueExecutionContext) -> QueueExecutionContext:
-        result = first(context)
+        result = first(
+            QueueExecutionContext(
+                environment=context.environment,
+                input_stream=context.input_stream,
+                output_stream=queue.Queue(),
+            )
+        )
         return second(
             QueueExecutionContext(
                 environment=result.environment,
