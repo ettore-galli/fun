@@ -200,7 +200,7 @@ def stream_lift(
 
 
 def bind_stream_processing(
-    first: QueueApplicationFunction, second: QueueApplicationFunction
+    first: QueueApplicationFunction, second: Optional[QueueApplicationFunction] = None
 ) -> QueueApplicationFunction:
     def bound_function(context: QueueExecutionContext) -> QueueExecutionContext:
         result = first(
@@ -210,12 +210,16 @@ def bind_stream_processing(
                 output_stream=queue.Queue(),
             )
         )
-        return second(
-            QueueExecutionContext(
-                environment=result.environment,
-                input_stream=result.output_stream,
-                output_stream=queue.Queue(),
+        return (
+            second(
+                QueueExecutionContext(
+                    environment=result.environment,
+                    input_stream=result.output_stream,
+                    output_stream=queue.Queue(),
+                )
             )
+            if second is not None
+            else result
         )
 
     return bound_function
