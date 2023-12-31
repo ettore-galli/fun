@@ -5,7 +5,7 @@ from functional.functional_tools.composing_single import (
     bind,
     bind_all,
 )
-from functional.mail_workflow.mail_message_core import (
+from functional.etl_workflows.single.mail_message_core import (
     MailMessage,
     RunEnvironment,
     log_issues,
@@ -122,9 +122,9 @@ if __name__ == "__main__":
     print(
         send_mail_functional(
             sender="myself@my.address",
-            recipient="destination@some.address",
-            subject="A Subject",
-            text="A Message...",
+            recipient="destination2@some.address",
+            subject="A Subject 2",
+            text="A Message 2...",
         )
     )
 
