@@ -2,12 +2,12 @@ import functools
 import os
 import queue
 from typing import Generator
-from functional.etl_workflow.etl_core import (
+from functional.etl_workflows.etl_core import (
     EtlSourceDataRecord,
     RunEnvironment,
     process_record,
 )
-from functional.etl_workflow.etl_stream_core import get_source_data, is_record_valid
+from functional.etl_workflows.etl_stream_core import get_source_data, is_record_valid
 from functional.functional_tools.composing import (
     ExecutionContext,
     ItemProcessingContext,
