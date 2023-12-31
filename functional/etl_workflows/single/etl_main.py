@@ -1,7 +1,7 @@
 from itertools import tee
 import os
 from typing import Iterator, Optional
-from functional.etl_workflows.etl_core import (
+from functional.etl_workflows.single.etl_core import (
     EtlSourceDataRecord,
     RunEnvironment,
     echo_data,
