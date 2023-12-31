@@ -150,13 +150,18 @@ class QueueItemProcessor(Protocol):
         ...
 
 
+class QueueItemPredicate(Protocol):
+    def __call__(self, item_processing_context: ItemProcessingContext) -> bool:
+        ...
+
+
 # pylint: disable=too-few-public-methods
 class QueueApplicationFunction(Protocol):
     def __call__(self, context: QueueExecutionContext) -> QueueExecutionContext:
         ...
 
 
-def stream_processing(
+def stream_processing_map(
     context: QueueExecutionContext,
     source: Optional[Iterable[ItemProcessingContext]],
     item_processor: QueueItemProcessor,
@@ -166,6 +171,29 @@ def stream_processing(
             item = context.input_stream.get()
             processed_item = item_processor(item)
             context.output_stream.put(processed_item)
+            context.input_stream.task_done()
+
+    threading.Thread(target=process_elements, daemon=True).start()
+
+    if source:
+        for element in source:
+            context.input_stream.put(element)
+
+    context.input_stream.join()
+
+    return context
+
+
+def stream_processing_filter(
+    context: QueueExecutionContext,
+    source: Optional[Iterable[ItemProcessingContext]],
+    item_predicate: QueueItemPredicate,
+) -> QueueExecutionContext:
+    def process_elements():
+        while True:
+            item = context.input_stream.get()
+            if item_predicate(item):
+                context.output_stream.put(item)
             context.input_stream.task_done()
 
     threading.Thread(target=process_elements, daemon=True).start()
@@ -189,7 +217,7 @@ def stream_lift(
     context: QueueExecutionContext,
     source: Iterable[ItemProcessingContext],
 ) -> QueueExecutionContext:
-    context = stream_processing(
+    context = stream_processing_map(
         context=context, source=source, item_processor=identity_processor
     )
     return QueueExecutionContext(
@@ -223,3 +251,17 @@ def bind_stream_processing(
         )
 
     return bound_function
+
+
+def bind_queue_stream_identity(
+    context: QueueExecutionContext,
+) -> QueueExecutionContext:
+    return context
+
+
+def bind_queue_stream_all(
+    composables: Iterable[QueueApplicationFunction],
+) -> QueueApplicationFunction:
+    return functools.reduce(
+        bind_stream_processing, composables, bind_queue_stream_identity
+    )

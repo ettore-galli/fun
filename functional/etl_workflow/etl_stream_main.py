@@ -7,13 +7,14 @@ from functional.etl_workflow.etl_core import (
     RunEnvironment,
     process_record,
 )
-from functional.etl_workflow.etl_stream_core import get_source_data
+from functional.etl_workflow.etl_stream_core import get_source_data, is_record_valid
 from functional.functional_tools.composing import (
     ExecutionContext,
     ItemProcessingContext,
     QueueExecutionContext,
-    bind_stream_processing,
-    stream_processing,
+    bind_queue_stream_all,
+    stream_processing_filter,
+    stream_processing_map,
 )
 
 StreamItem = ItemProcessingContext[RunEnvironment, EtlSourceDataRecord]
@@ -42,9 +43,21 @@ def acquire_record_data_processor(
 def print_data_processor(
     item_processing_context: ItemProcessingContext,
 ) -> ItemProcessingContext:
-    print(item_processing_context.item)
+    print(
+        f"{item_processing_context.item.sepal_length}"
+        f"\t{item_processing_context.item.sepal_width}"
+        f"\t{item_processing_context.item.petal_length}"
+        f"\t{item_processing_context.item.petal_width}"
+        f"\t{item_processing_context.item.iris_class}"
+    )
 
     return item_processing_context
+
+
+def filter_record_data_processor(
+    item_processing_context: ItemProcessingContext,
+) -> bool:
+    return is_record_valid(item_processing_context.item)
 
 
 def read_data_step(context: EtlContext) -> EtlContext:
@@ -86,22 +99,35 @@ def etl_workflow_main():
         output_stream=queue.Queue(),
     )
 
-    workflow = bind_stream_processing(
-        functools.partial(
-            stream_processing,
-            item_processor=acquire_record_data_processor,
-            source=get_source_data_stream(
-                environment=run_environment, file_fqn=run_environment.input_file
+    workflow = bind_queue_stream_all(
+        [
+            functools.partial(
+                stream_processing_map,
+                item_processor=acquire_record_data_processor,
+                source=get_source_data_stream(
+                    environment=run_environment, file_fqn=run_environment.input_file
+                ),
             ),
-        ),
-        functools.partial(
-            stream_processing,
-            item_processor=print_data_processor,
-            source=None,
-        ),
+            functools.partial(
+                stream_processing_map,
+                item_processor=print_data_processor,
+                source=None,
+            ),
+            functools.partial(
+                stream_processing_filter,
+                item_predicate=filter_record_data_processor,
+                source=None,
+            ),
+            functools.partial(
+                stream_processing_map,
+                item_processor=print_data_processor,
+                source=None,
+            ),
+        ]
     )
 
-    print(workflow(start_context).output_stream)
+    result = workflow(start_context).output_stream
+    print(result)
 
 
 if __name__ == "__main__":

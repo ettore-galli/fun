@@ -18,7 +18,7 @@ from functional.functional_tools.composing import (
     bind_stream_all,
     bind_stream_processing,
     stream_lift,
-    stream_processing,
+    stream_processing_map,
 )
 
 
@@ -180,7 +180,7 @@ def test_stream_lift():
     ]
 
 
-def test_stream_processing():
+def test_stream_processing_various():
     def data_source() -> Generator[ItemProcessingContext, None, None]:
         return (
             ItemProcessingContext[Dict, str](
@@ -211,10 +211,10 @@ def test_stream_processing():
 
     bound_stream_processes = bind_stream_processing(
         functools.partial(
-            stream_processing, item_processor=item_processor_1, source=data_source()
+            stream_processing_map, item_processor=item_processor_1, source=data_source()
         ),
         functools.partial(
-            stream_processing, item_processor=item_processor_2, source=None
+            stream_processing_map, item_processor=item_processor_2, source=None
         ),
     )
 

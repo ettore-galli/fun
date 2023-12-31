@@ -98,6 +98,10 @@ def preprocess_data(
         yield process_record(item)
 
 
+def is_record_valid(record: EtlSourceDataRecord):
+    return float(record.sepal_length or 0) < 80.0
+
+
 def select_valid_records(
     data: Iterable[EtlSourceDataRecord],
 ) -> Generator[Tuple[Optional[EtlSourceDataRecord], Optional[Issue]], None, None]:
