@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict, fields
 from datetime import datetime
 from typing import Any, Generator, Iterable, List, Optional, Tuple
 
-from functional.functional_tools.composing import Issue, IssueType
+from functional.functional_tools.composing_single import Issue, IssueType
 
 
 @dataclass(frozen=True, kw_only=True)

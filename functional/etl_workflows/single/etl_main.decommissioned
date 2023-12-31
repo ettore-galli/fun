@@ -11,7 +11,7 @@ from functional.etl_workflows.single.etl_core import (
     select_valid_records,
     write_csv_data,
 )
-from functional.functional_tools.composing import (
+from functional.functional_tools.composing_stream import (
     ExecutionContext,
     Issue,
     IssueType,

@@ -2,14 +2,13 @@ import functools
 import os
 import queue
 from typing import Generator
-from functional.etl_workflows.single.etl_core import (
+from functional.etl_workflows.etl_stream_core import (
     EtlSourceDataRecord,
     RunEnvironment,
     process_record,
 )
 from functional.etl_workflows.etl_stream_core import get_source_data, is_record_valid
-from functional.functional_tools.composing import (
-    ExecutionContext,
+from functional.functional_tools.composing_stream import (
     ItemProcessingContext,
     QueueExecutionContext,
     bind_queue_stream_all,
@@ -18,7 +17,7 @@ from functional.functional_tools.composing import (
 )
 
 StreamItem = ItemProcessingContext[RunEnvironment, EtlSourceDataRecord]
-EtlContext = ExecutionContext[StreamItem, RunEnvironment]
+# EtlContext = ExecutionContext[StreamItem, RunEnvironment]
 
 
 def get_source_data_stream(
@@ -60,28 +59,28 @@ def filter_record_data_processor(
     return is_record_valid(item_processing_context.item)
 
 
-def read_data_step(context: EtlContext) -> EtlContext:
-    return context
+# def read_data_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
-def echo_data_step(context: EtlContext) -> EtlContext:
-    return context
+# def echo_data_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
-def preprocess_data_step(context: EtlContext) -> EtlContext:
-    return context
+# def preprocess_data_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
-def select_records_step(context: EtlContext) -> EtlContext:
-    return context
+# def select_records_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
-def log_issues_step(context: EtlContext) -> EtlContext:
-    return context
+# def log_issues_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
-def write_csv_data_step(context: EtlContext) -> EtlContext:
-    return context
+# def write_csv_data_step(context: EtlContext) -> EtlContext:
+#     return context
 
 
 def etl_workflow_main():
