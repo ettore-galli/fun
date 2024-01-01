@@ -39,7 +39,17 @@ IRIS_FIELDS = [
 
 # pylint: disable=too-many-instance-attributes
 @dataclass(frozen=True)
-class EtlOutputDataRecord:
+class EtlInputDataRecord:
+    sepal_length: Optional[float] = None
+    sepal_width: Optional[float] = None
+    petal_length: Optional[float] = None
+    petal_width: Optional[float] = None
+    iris_class: Optional[str] = None
+
+
+# pylint: disable=too-many-instance-attributes
+@dataclass(frozen=True)
+class EtlFullDataRecord:
     sepal_length: Optional[float] = None
     sepal_width: Optional[float] = None
     petal_length: Optional[float] = None
@@ -134,7 +144,7 @@ def log_issues(run_environment: RunEnvironment, issues: Iterable[Issue]) -> List
 
 
 def write_csv_data(out_file: str, data: Iterable[EtlSourceDataRecord]) -> None:
-    fieldnames: List[str] = [field.name for field in fields(EtlOutputDataRecord)]
+    fieldnames: List[str] = [field.name for field in fields(EtlInputDataRecord)]
 
     with open(out_file, mode="w", encoding="utf-8") as out_csv_file:
         writer = csv.DictWriter(f=out_csv_file, fieldnames=fieldnames)

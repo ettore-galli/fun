@@ -51,10 +51,45 @@ class QueueItemPredicate(Protocol):
         ...
 
 
+class QueueAllItemsProcessorConsumer(Protocol):
+    def __call__(self, all_items: Iterable[ItemProcessingContext]) -> None:
+        ...
+
+
 # pylint: disable=too-few-public-methods
 class QueueApplicationFunction(Protocol):
     def __call__(self, context: QueueExecutionContext) -> QueueExecutionContext:
         ...
+
+
+def stream_processing_reduce_adapter(
+    context: QueueExecutionContext,
+    source: Optional[Iterable[ItemProcessingContext]],
+    all_items_processor_consumer: QueueAllItemsProcessorConsumer,
+) -> QueueExecutionContext:
+    def process_elements(all_items: List[ItemProcessingContext]):
+        while True:
+            item = context.input_stream.get()
+            all_items.append(item)
+
+            context.output_stream.put(item)
+            context.input_stream.task_done()
+
+    items: List[ItemProcessingContext] = []
+
+    threading.Thread(
+        target=process_elements, daemon=True, kwargs={"all_items": items}
+    ).start()
+
+    if source:
+        for element in source:
+            context.input_stream.put(element)
+
+    context.input_stream.join()
+
+    all_items_processor_consumer(items)
+
+    return context
 
 
 def stream_processing_map(
